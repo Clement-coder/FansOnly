@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 
@@ -26,6 +27,8 @@ export default function RootLayout({
         {children}
         <Footer />
         <Analytics />
+                <SpeedInsights />
+
       </body>
     </html>
   )

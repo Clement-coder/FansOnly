@@ -4,7 +4,7 @@ import Link from 'next/link'
 import type { LinkProps } from 'next/link'
 import type { FC, PropsWithChildren } from 'react'
 
-const SmoothLink: FC<PropsWithChildren<LinkProps>> = ({ children, ...props }) => {
+const SmoothLink: FC<PropsWithChildren<LinkProps & { className?: string }>> = ({ children, ...props }) => {
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault()
     const href = e.currentTarget.href

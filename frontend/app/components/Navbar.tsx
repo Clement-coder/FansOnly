@@ -4,6 +4,7 @@ import Link from "next/link"
 import SmoothLink from "./SmoothLink"
 import { Menu, X, Home, LayoutDashboard, Info, Mail, Rocket, Sparkles } from "lucide-react"
 import { useState } from "react"
+import { LoginButton } from "./LoginButton"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -48,13 +49,7 @@ export default function Navbar() {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/onboarding"
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary-dark transition-all hover:shadow-md hover:scale-105 active:scale-95 flex items-center gap-2"
-            >
-              <Rocket size={16} />
-              Get Started
-            </Link>
+        <LoginButton/>
           </div>
 
           {/* Mobile Menu Button */}
@@ -94,13 +89,7 @@ export default function Navbar() {
               <Mail size={16} />
               Contact
             </SmoothLink>
-            <Link
-              href="/onboarding"
-              className="flex items-center gap-2 block w-full px-6 py-2 bg-primary text-primary-foreground rounded-full font-medium text-center hover:bg-primary-dark transition-all"
-            >
-              <Rocket size={16} />
-              Get Started
-            </Link>
+            <LoginButton />
           </div>
         )}
       </div>

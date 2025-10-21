@@ -6,6 +6,7 @@ import "./globals.css"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
+import { Providers } from "./providers/provider"
 
 
 
@@ -23,11 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased ${GeistSans.className}`}>
-        <Navbar />
+        <Providers>
+  <Navbar />
         {children}
         <Footer />
         <Analytics />
                 <SpeedInsights />
+        </Providers>
+      
 
       </body>
     </html>

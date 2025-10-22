@@ -14,12 +14,6 @@ export function LoginButton() {
 
   console.log("LoginButton State:", { ready, authenticated, user });
 
-  useEffect(() => {
-    if (ready && authenticated) {
-      router.push("/onboarding");
-    }
-  }, [ready, authenticated, router]);
-
   const handleLogout = async () => {
     disconnect();
     await logout();

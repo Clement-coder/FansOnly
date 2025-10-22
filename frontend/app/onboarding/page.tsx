@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, AtSign, MessageSquare, Image as ImageIcon, Rocket, Handshake } from "lucide-react";
 import { Input } from "../components/Input"; // Assuming you have an Input component
+import { usePrivy } from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
@@ -14,6 +16,9 @@ export default function OnboardingPage() {
     avatar: null,
     role: "",
   });
+
+  const { user, updateUser } = usePrivy();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -34,14 +39,29 @@ export default function OnboardingPage() {
     setStep(2);
   };
 
-  const handleFinish = () => {
-    // Simulate API call or redirect
+  const handleFinish = async () => {
     console.log("Onboarding complete:", formData);
-    // In a real app, you'd redirect based on formData.role
-    if (formData.role === "Creator") {
-      window.location.href = "/dashboard/creator"; // Replace with Next.js router push
-    } else if (formData.role === "Fan") {
-      window.location.href = "/dashboard/fan"; // Replace with Next.js router push
+    if (user) {
+      try {
+        await updateUser({
+          metadata: {
+            role: formData.role,
+            fullName: formData.fullName,
+            username: formData.username,
+            bio: formData.bio,
+            onboardingComplete: true,
+          },
+        });
+
+        if (formData.role === "Creator") {
+          router.push("/dashboard/creator");
+        } else if (formData.role === "Fan") {
+          router.push("/dashboard/fan");
+        }
+      } catch (error) {
+        console.error("Error updating user metadata:", error);
+        // Handle error, maybe show a message to the user
+      }
     }
   };
 

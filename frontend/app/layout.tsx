@@ -7,7 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import { Providers } from "./providers/provider"
-
+import { OnboardingRedirector } from "./components/OnboardingRedirector"
 
 
 export const metadata: Metadata = {
@@ -25,14 +25,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased ${GeistSans.className}`}>
         <Providers>
-  <Navbar />
-        {children}
-        <Footer />
-        <Analytics />
-                <SpeedInsights />
+          <OnboardingRedirector />
+          <Navbar />
+          {children}
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
         </Providers>
-      
-
       </body>
     </html>
   )

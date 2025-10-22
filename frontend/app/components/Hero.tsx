@@ -1,6 +1,5 @@
 "use client"
 
-import { LoginButton } from "./LoginButton";
 import { motion } from "framer-motion"
 import { ArrowRight, Zap } from "lucide-react"
 import Link from "next/link"
@@ -54,7 +53,12 @@ export default function Hero() {
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <LoginButton />
+          <Link
+            href="/explore"
+            className="px-8 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-md"
+          >
+            Explore
+          </Link>
           <Link
             href="#features"
             className="px-8 py-3 bg-card text-foreground border border-border rounded-full font-semibold hover:bg-secondary transition-all hover:shadow-md"

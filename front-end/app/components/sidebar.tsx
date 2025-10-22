@@ -1,0 +1,67 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { LayoutDashboard, Zap, BarChart3, Settings, LogOut, X } from "lucide-react"
+import { ConnectWalletButton } from "./connectWalletButton"
+
+interface SidebarProps {
+  role: "creator" | "fan"
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
+}
+
+export function Sidebar({ role, isSidebarOpen, toggleSidebar }: SidebarProps) {
+  const pathname = usePathname()
+
+  const creatorLinks = [
+    { href: "/dashboard/creator", label: "Overview", icon: LayoutDashboard },
+    { href: "/dashboard/creator/campaigns", label: "Campaigns", icon: Zap },
+    { href: "/dashboard/creator/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/dashboard/creator/settings", label: "Settings", icon: Settings },
+  ]
+
+  const fanLinks = [
+    { href: "/dashboard/fan", label: "Overview", icon: LayoutDashboard },
+    { href: "/dashboard/fan/rewards", label: "Rewards", icon: Zap },
+    { href: "/dashboard/fan/history", label: "History", icon: BarChart3 },
+    { href: "/dashboard/fan/settings", label: "Settings", icon: Settings },
+  ]
+
+  const links = role === "creator" ? creatorLinks : fanLinks
+
+  return (
+    <aside className="w-64 bg-card border-r border-border h-screen flex flex-col">
+      <div className="p-6 border-b border-border flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/FansOnly.png" alt="FansOnly Logo" className="h-12 w-auto" />
+        </Link>
+        <button onClick={toggleSidebar} className="lg:hidden text-muted hover:text-foreground">
+          <X size={24} />
+        </button>
+      </div>
+
+      <nav className="flex-1 p-4 space-y-2">
+        {links.map((link) => {
+          const Icon = link.icon
+          const isActive = pathname === link.href
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+              }`}
+              onClick={toggleSidebar} // Close sidebar on link click on small screens
+            >
+              <Icon size={20} />
+              <span className="font-medium">{link.label}</span>
+            </Link>
+          )
+        })}
+      </nav>
+
+   <ConnectWalletButton/>
+    </aside>
+  )
+}

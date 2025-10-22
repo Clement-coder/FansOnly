@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Header } from "../components/header"
 import { Footer } from "../components/footer"
 import { Wallet, User, CheckCircle2 } from "lucide-react"
+import { ConnectWalletButton } from "../components/connectWalletButton"
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1)
@@ -90,16 +91,10 @@ export default function OnboardingPage() {
               <p className="text-muted">Link your Web3 wallet to get started on FansOnly.</p>
             </div>
 
-            <div className="space-y-4">
-              <button
-                onClick={handleWalletConnect}
-                className="btn-primary w-full flex items-center justify-center gap-2"
-              >
-                <Wallet size={20} />
-                Connect MetaMask
-              </button>
-              <button className="btn-secondary w-full">Connect WalletConnect</button>
-              <button className="btn-secondary w-full">Connect Coinbase Wallet</button>
+            <div className="justify-center flex flex-col items-center">
+                <div></div>
+             <ConnectWalletButton/>
+             
             </div>
 
             <p className="text-xs text-muted text-center mt-6">

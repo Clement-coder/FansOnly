@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Zap, BarChart3, Settings, LogOut, X } from "lucide-react"
+import { LayoutDashboard, Zap, BarChart3, Settings, LogOut, X, Compass } from "lucide-react"
 import { ConnectWalletButton } from "./connectWalletButton"
 
 interface SidebarProps {
@@ -17,6 +17,7 @@ export function Sidebar({ role, isSidebarOpen, toggleSidebar }: SidebarProps) {
   const creatorLinks = [
     { href: "/dashboard/creator", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/creator/campaigns", label: "Campaigns", icon: Zap },
+    { href: "/dashboard/creator/discover", label: "Discover", icon: Compass },
     { href: "/dashboard/creator/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/dashboard/creator/settings", label: "Settings", icon: Settings },
   ]
@@ -24,6 +25,7 @@ export function Sidebar({ role, isSidebarOpen, toggleSidebar }: SidebarProps) {
   const fanLinks = [
     { href: "/dashboard/fan", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/fan/rewards", label: "Rewards", icon: Zap },
+    { href: "/dashboard/fan/discover", label: "Discover", icon: Compass },
     { href: "/dashboard/fan/history", label: "History", icon: BarChart3 },
     { href: "/dashboard/fan/settings", label: "Settings", icon: Settings },
   ]

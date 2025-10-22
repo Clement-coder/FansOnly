@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Wallet } from "lucide-react"
 import { useState } from "react"
+import { ConnectWalletButton } from "./connectWalletButton"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,10 +36,9 @@ export function Header() {
           </Link>
         </div>
 
-        <Link href="/onboarding" className="btn-primary hidden sm:inline-flex items-center gap-2">
-          <Wallet size={18} />
-          Connect Wallet
-        </Link>
+<div  className=" hidden lg:block">
+    <ConnectWalletButton/>
+</div>
 
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

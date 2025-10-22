@@ -6,6 +6,7 @@ import { Footer } from "./components/footer"
 import { FeatureCard } from "./components/feature-card"
 import { Zap, Users, TrendingUp, Lock, Award, BarChart3 } from "lucide-react"
 
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">

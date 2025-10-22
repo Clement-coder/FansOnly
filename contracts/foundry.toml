@@ -1,0 +1,18 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/"
+]
+
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
+
+[rpc_endpoints]
+base-sepolia = "https://base-sepolia.g.alchemy.com/v2/"
+
+[etherscan]
+base-sepolia = { key = "",  url = "https://api-sepolia.basescan.org/api/v2" }
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

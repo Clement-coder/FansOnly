@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { StatCard } from "@/app/components/stat-card"
-import { Coins, Users, TrendingUp, Zap, CalendarDays, Tag, AlignLeft, CircleDollarSign, Activity } from "lucide-react"
+import { Coins, Users, TrendingUp, Zap, CalendarDays, Tag, AlignLeft, CircleDollarSign, Activity, Mail, Briefcase, Wallet, User } from "lucide-react"
 import { useAccount } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
 import { CreateCampaignModal } from "@/app/components/create-campaign-modal"
@@ -59,35 +59,53 @@ export default function CreatorDashboard() {
   return (
     <DashboardLayout role="creator">
       <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back, {userProfile?.name || "Creator"}!
-          </h1>
-          <p className="text-muted">Here's your campaign performance overview.</p>
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center">
+              Welcome back, {userProfile?.name || "Creator"}! <span className="ml-2 text-4xl animate-wave">👋</span>
+            </h1>
+            <p className="text-muted">Here's your campaign performance overview.</p>
+          </div>
         </div>
 
         {/* User Information Summary */}
         <div className="card-base mb-8 p-6">
           <h2 className="text-xl font-bold text-foreground mb-4">Your Profile</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-muted">Name:</p>
-              <p className="font-semibold text-foreground">{userProfile?.name || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Name:</p>
+                <p className="font-semibold text-foreground">{userProfile?.name || "N/A"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted">Username:</p>
-              <p className="font-semibold text-foreground">{userProfile?.username || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Username:</p>
+                <p className="font-semibold text-foreground">{userProfile?.username || "N/A"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted">Email:</p>
-              <p className="font-semibold text-foreground">{userProfile?.email || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <Mail size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Email:</p>
+                <p className="font-semibold text-foreground">{userProfile?.email || "N/A"}</p>
+              </div>
             </div>
-                          <div>
-                            <p className="text-muted">Role:</p>
-                            <p className="font-semibold text-foreground capitalize">{"creator"}</p>
-                          </div>            <div className="md:col-span-2">
-              <p className="text-muted">Wallet Address:</p>
-              <p className="font-semibold text-foreground break-all">{walletAddress || "Not Connected"}</p>
+            <div className="flex items-center gap-2">
+              <Briefcase size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Role:</p>
+                <p className="font-semibold text-foreground capitalize">{"creator"}</p>
+              </div>
+            </div>
+            <div className="md:col-span-2 flex items-center gap-2">
+              <Wallet size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Wallet Address:</p>
+                <p className="font-semibold text-foreground break-all">{walletAddress || "Not Connected"}</p>
+              </div>
             </div>
           </div>
         </div>

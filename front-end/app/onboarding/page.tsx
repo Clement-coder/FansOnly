@@ -44,7 +44,12 @@ export default function OnboardingPage() {
       return
     }
 
-    localStorage.setItem("userProfile", JSON.stringify(formData))
+    const finalFormData = { ...formData };
+    if (finalFormData.role === "creator") {
+      finalFormData.role = "both";
+    }
+
+    localStorage.setItem("userProfile", JSON.stringify(finalFormData))
     setStep(3)
   }
 
@@ -52,52 +57,51 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
         {/* Progress Indicator */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-8">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center text-center">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-base sm:text-lg transition-all ${
                   step >= 1 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted"
                 }`}
               >
-                {step > 1 ? <CheckCircle2 size={24} /> : "1"}
+                {step > 1 ? <CheckCircle2 size={20} className="sm:size-24" /> : "1"}
               </div>
-              <span className="text-sm mt-2 text-muted">Connect Wallet</span>
+              <span className="text-xs sm:text-sm mt-2 text-muted">Connect Wallet</span>
             </div>
 
-            <div className={`flex-1 h-1 mx-4 ${step >= 2 ? "bg-primary" : "bg-secondary"}`}></div>
+            <div className={`flex-1 h-1 mx-2 sm:mx-4 ${step >= 2 ? "bg-primary" : "bg-secondary"}`}></div>
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center text-center">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-base sm:text-lg transition-all ${
                   step >= 2 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted"
                 }`}
               >
-                {step > 2 ? <CheckCircle2 size={24} /> : "2"}
+                {step > 2 ? <CheckCircle2 size={20} className="sm:size-24" /> : "2"}
               </div>
-              <span className="text-sm mt-2 text-muted">Profile Setup</span>
+              <span className="text-xs sm:text-sm mt-2 text-muted">Profile Setup</span>
             </div>
 
-            <div className={`flex-1 h-1 mx-4 ${step >= 3 ? "bg-primary" : "bg-secondary"}`}></div>
+            <div className={`flex-1 h-1 mx-2 sm:mx-4 ${step >= 3 ? "bg-primary" : "bg-secondary"}`}></div>
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center text-center">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-base sm:text-lg transition-all ${
                   step >= 3 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted"
                 }`}
               >
                 3
               </div>
-              <span className="text-sm mt-2 text-muted">Complete</span>
+              <span className="text-xs sm:text-sm mt-2 text-muted">Complete</span>
             </div>
           </div>
         </div>
 
         {/* Step 1: Wallet Connection */}
-        {step === 1 && (
-          <div className="card-base max-w-md mx-auto animate-fade-in">
+          <div className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Wallet size={32} className="text-primary" />
@@ -120,7 +124,7 @@ export default function OnboardingPage() {
 
         {/* Step 2: Profile Setup */}
         {step === 2 && (
-          <div className="card-base max-w-md mx-auto animate-fade-in">
+          <div className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User size={32} className="text-primary" />
@@ -200,7 +204,6 @@ export default function OnboardingPage() {
                 >
                   <option value="fan">Fan</option>
                   <option value="creator">Creator</option>
-                  <option value="both">Both</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
                   <svg
@@ -229,7 +232,7 @@ export default function OnboardingPage() {
 
         {/* Step 3: Completion */}
         {step === 3 && (
-          <div className="card-base max-w-md mx-auto animate-fade-in text-center">
+          <div className="card-base max-w-md mx-auto animate-fade-in text-center p-4 sm:p-8">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 size={32} className="text-primary" />
             </div>
@@ -241,14 +244,6 @@ export default function OnboardingPage() {
               Your profile is all set. You're ready to start your journey in the new era of fan engagement.
             </p>
 
-            {formData.role === "creator" && (
-              <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-8">
-                <h3 className="font-semibold mb-2">Creator's Corner</h3>
-                <p>As a creator, you can now set up your campaigns, manage subscriptions, and track your earnings.</p>
-                {/* Placeholder for more creator-specific info */}
-              </div>
-            )}
-
             {formData.role === "fan" && (
               <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-8">
                 <h3 className="font-semibold mb-2">Fan Zone</h3>
@@ -259,8 +254,8 @@ export default function OnboardingPage() {
 
             {formData.role === "both" && (
               <div className="bg-purple-100 text-purple-800 p-4 rounded-lg mb-8">
-                <h3 className="font-semibold mb-2">Hybrid Hub</h3>
-                <p>Enjoy the best of both worlds! Create content and support your favorite artists.</p>
+                <h3 className="font-semibold mb-2">Creator & Fan Hub</h3>
+                <p>As a creator, you can now set up your campaigns, manage subscriptions, and track your earnings. You also have access to all fan privileges!</p>
                 {/* Placeholder for more hybrid-specific info */}
               </div>
             )}
@@ -301,7 +296,7 @@ export default function OnboardingPage() {
 
             <div className="space-y-3">
               <Link
-                href={formData.role === "creator" ? "/dashboard/creator" : "/dashboard/fan"}
+                href={formData.role === "both" ? "/dashboard/creator" : "/dashboard/fan"}
                 className="btn-primary w-full block text-center"
               >
                 Go to Dashboard

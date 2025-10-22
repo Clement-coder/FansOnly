@@ -25,11 +25,13 @@ export default function FanDashboard() {
   return (
     <DashboardLayout role="fan">
       <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back, {userProfile?.name || "Fan"}!
-          </h1>
-          <p className="text-muted">Track your rewards and engagement progress.</p>
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center">
+              Welcome back, {userProfile?.name || "Fan"}! <span className="ml-2 text-4xl animate-wave">👋</span>
+            </h1>
+            <p className="text-muted">Track your rewards and engagement progress.</p>
+          </div>
         </div>
 
         {/* User Information Summary */}

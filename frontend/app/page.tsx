@@ -1,5 +1,6 @@
 "use client"
 
+import { LoginButton } from "./components/LoginButton";
 import Hero from "./components/Hero"
 import CreatorCard from "./components/CreatorCard"
 import { motion } from "framer-motion"
@@ -146,13 +147,7 @@ export default function Home() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Fan Community?</h2>
           <p className="text-lg mb-8 opacity-90">Start building loyalty today with FansOnly</p>
-          <a
-            href="/onboarding"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-primary-foreground text-primary rounded-full font-semibold hover:shadow-lg transition-all hover:scale-105 active:scale-95"
-          >
-            <Rocket size={20} />
-            Get Started Now
-          </a>
+          <LoginButton />
         </motion.div>
       </section>
     </main>

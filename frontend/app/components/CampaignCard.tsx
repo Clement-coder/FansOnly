@@ -1,62 +1,41 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Calendar } from "lucide-react"
+import React from "react";
+import { motion } from "framer-motion";
+import { Rocket, TrendingUp } from "lucide-react";
 
-export interface CampaignCardProps {
-  title: string
-  description: string
-  progress: number
-  target: number
-  daysLeft: number
-  status: "active" | "completed" | "draft"
+interface CampaignCardProps {
+  id: string;
+  title: string;
+  description: string;
+  progress: number; // Percentage
 }
 
-export default function CampaignCard({ title, description, progress, target, daysLeft, status }: CampaignCardProps) {
-  const progressPercent = (progress / target) * 100
-
+export function CampaignCard({ id, title, description, progress }: CampaignCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -4 }}
-      className="bg-card rounded-2xl border border-border p-6 hover:shadow-lg transition-all"
+      className="p-6 bg-card rounded-2xl shadow-lg border border-border cursor-pointer"
+      whileHover={{ scale: 1.02, boxShadow: "0 0 15px rgba(139, 92, 246, 0.5)" }} // Glow shadow
+      transition={{ duration: 0.2 }}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="font-bold text-lg text-foreground mb-1">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+          <Rocket size={20} />
         </div>
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            status === "active"
-              ? "bg-green-100 text-green-700"
-              : status === "completed"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-700"
-          }`}
-        >
-          {status.charAt(0).toUpperCase() + status.slice(1)}
-        </span>
+        <h3 className="text-xl font-bold text-foreground">{title}</h3>
       </div>
+      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{description}</p>
 
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-foreground">
-            ${progress.toLocaleString()} / ${target.toLocaleString()}
-          </span>
-          <span className="text-sm text-muted-foreground">{Math.round(progressPercent)}%</span>
-        </div>
-        <div className="w-full bg-secondary rounded-full h-2">
-          <div
-            className="bg-primary rounded-full h-2 transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
+      {/* Progress Bar */}
+      <div className="w-full bg-secondary rounded-full h-2.5 mb-2">
+        <motion.div
+          className="bg-primary h-2.5 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        ></motion.div>
       </div>
-
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Calendar size={16} />
-        <span>{daysLeft} days left</span>
-      </div>
+      <p className="text-right text-xs text-muted-foreground">{progress}% Complete</p>
     </motion.div>
-  )
+  );
 }

@@ -1,43 +1,23 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import CampaignCard, { CampaignCardProps } from "../../components/CampaignCard"
-import { Plus, TrendingUp, Users, DollarSign } from "lucide-react"
-import Link from "next/link"
+import React from "react";
+import { motion } from "framer-motion";
+import { Users, DollarSign, Rocket } from "lucide-react";
+import Link from "next/link";
+import { CampaignCard } from "../../components/CampaignCard"; // Assuming this component will be created
 
-export default function CreatorDashboard() {
-  const campaigns: CampaignCardProps[] = [
-    {
-      title: "Summer Music Festival",
-      description: "Exclusive access to my new album release party",
-      progress: 7500,
-      target: 10000,
-      daysLeft: 12,
-      status: "active",
-    },
-    {
-      title: "VIP Backstage Passes",
-      description: "Get a chance to meet me backstage after the show",
-      progress: 25000,
-      target: 25000,
-      daysLeft: 0,
-      status: "completed",
-    },
-    {
-      title: "New Album Pre-Release",
-      description: "Early access to my new album before anyone else",
-      progress: 0,
-      target: 5000,
-      daysLeft: 30,
-      status: "draft",
-    },
-  ]
-
+export default function CreatorDashboardPage() {
   const stats = [
-    { label: "Total Revenue", value: "$45,231", icon: DollarSign, color: "text-green-600" },
-    { label: "Followers", value: "45,000", icon: Users, color: "text-blue-600" },
-    { label: "Engagement Rate", value: "12.5%", icon: TrendingUp, color: "text-pink-600" },
-  ]
+    { label: "Total Fans", value: "12,345", icon: <Users size={20} /> },
+    { label: "Coin Balance", value: "50,000 FANX", icon: <DollarSign size={20} /> },
+    { label: "Active Campaigns", value: "3", icon: <Rocket size={20} /> },
+  ];
+
+  const campaigns = [
+    { id: "1", title: "Summer Exclusive Content", description: "Access behind-the-scenes content and early releases.", progress: 75 },
+    { id: "2", title: "Community Q&A Session", description: "Join a live Q&A with me and other top fans.", progress: 50 },
+    { id: "3", title: "Limited Edition Merch Drop", description: "Get your hands on exclusive, signed merchandise.", progress: 25 },
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,7 +27,7 @@ export default function CreatorDashboard() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -56,78 +36,66 @@ export default function CreatorDashboard() {
       y: 0,
       transition: { duration: 0.6 },
     },
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12"
-        >
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">Creator Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back, Alex!</p>
-          </div>
-          <Link
-            href="/dashboard/creator/campaigns"
-            className="mt-4 md:mt-0 px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105 active:scale-95 flex items-center gap-2"
-          >
-            <Plus size={20} /> Create Campaign
-          </Link>
-        </motion.div>
+    <div className="min-h-screen bg-background p-4 md:p-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto"
+      >
+        <h1 className="text-4xl font-bold text-foreground mb-8">Creator Dashboard</h1>
 
-        {/* Stats */}
+        {/* Stats Header */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
         >
-          {stats.map((stat, i) => {
-            const Icon = stat.icon
-            return (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                className="bg-card rounded-2xl border border-border p-6 hover:shadow-lg transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <p className="text-muted-foreground text-sm mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                  </div>
-                  <Icon size={24} className={stat.color} />
-                </div>
-              </motion.div>
-            )
-          })}
+          {stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              className="p-6 bg-card rounded-2xl shadow-lg border border-border flex items-center gap-4"
+            >
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                {stat.icon}
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">{stat.label}</p>
+                <h2 className="text-2xl font-bold text-foreground">{stat.value}</h2>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
 
-        {/* Campaigns */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <h2 className="text-2xl font-bold text-foreground mb-6">Your Campaigns</h2>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        {/* Campaigns Section */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-foreground">My Campaigns</h2>
+          <Link
+            href="/dashboard/creator/campaigns/new"
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105 active:scale-95 flex items-center gap-2"
           >
-            {campaigns.map((campaign, i) => (
-              <motion.div key={i} variants={itemVariants}>
-                <CampaignCard {...campaign} />
-              </motion.div>
-            ))}
-          </motion.div>
+            <Rocket size={20} /> Create Campaign
+          </Link>
+        </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {campaigns.map((campaign, i) => (
+            <motion.div key={campaign.id} variants={itemVariants}>
+              <CampaignCard {...campaign} />
+            </motion.div>
+          ))}
         </motion.div>
-      </div>
-    </main>
-  )
+      </motion.div>
+    </div>
+  );
 }

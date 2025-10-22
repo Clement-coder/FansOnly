@@ -2,11 +2,82 @@
 
 import Link from "next/link"
 import SmoothLink from "./SmoothLink"
-import { Menu, X, Home, LayoutDashboard, Info, Mail, Rocket, Sparkles } from "lucide-react"
+import { Menu, X, Home, LayoutDashboard, Info, Mail, Gem, Rocket, Sparkles, PlusCircle, User as UserIcon } from "lucide-react"
 import { useState } from "react"
+import { LoginButton } from "./LoginButton"
+import { usePathname } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const { isAuthenticated } = usePrivy();
+
+  const isCreatorDashboard = pathname.startsWith("/dashboard/creator");
+  const isFanDashboard = pathname.startsWith("/dashboard/fan");
+
+  const defaultNavLinks = (
+    <>
+      <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Home size={16} />
+        Home
+      </Link>
+      <SmoothLink href="#features" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Info size={16} />
+        About
+      </SmoothLink>
+      <SmoothLink href="#contact" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Mail size={16} />
+        Contact
+      </SmoothLink>
+    </>
+  );
+
+  const creatorNavLinks = (
+    <>
+      <Link href="/dashboard/creator" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Home size={16} />
+        Home
+      </Link>
+      <Link href="/dashboard/creator/campaigns/new" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <PlusCircle size={16} />
+        Create Campaign
+      </Link>
+      <Link href="/dashboard/creator/campaigns" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Rocket size={16} />
+        My Campaigns
+      </Link>
+      <Link href="/dashboard/creator/profile" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <UserIcon size={16} />
+        Profile
+      </Link>
+    </>
+  );
+
+  const fanNavLinks = (
+    <>
+      <Link href="/dashboard/fan" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Home size={16} />
+        Home
+      </Link>
+      <Link href="/explore" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Sparkles size={16} />
+        Explore Creators
+      </Link>
+      <Link href="/dashboard/fan/engagements" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <LayoutDashboard size={16} />
+        My Engagements
+      </Link>
+      <Link href="/dashboard/fan/redeem" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <Gem size={16} />
+        Redeem
+      </Link>
+      <Link href="/dashboard/fan/profile" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
+        <UserIcon size={16} />
+        Profile
+      </Link>
+    </>
+  );
 
   return (
     <nav className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
@@ -25,36 +96,15 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
-              <Home size={16} />
-              Home
-            </Link>
-            <Link
-              href="/dashboard/creator"
-              className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-              <LayoutDashboard size={16} />
-              Dashboard
-            </Link>
-            <SmoothLink href="#features" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
-              <Info size={16} />
-              About
-            </SmoothLink>
-            <SmoothLink href="#contact" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors text-sm font-medium">
-              <Mail size={16} />
-              Contact
-            </SmoothLink>
+            {!isAuthenticated && defaultNavLinks}
+            {isAuthenticated && isCreatorDashboard && creatorNavLinks}
+            {isAuthenticated && isFanDashboard && fanNavLinks}
+            {isAuthenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
           </div>
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/onboarding"
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary-dark transition-all hover:shadow-md hover:scale-105 active:scale-95 flex items-center gap-2"
-            >
-              <Rocket size={16} />
-              Get Started
-            </Link>
+            <LoginButton />
           </div>
 
           {/* Mobile Menu Button */}
@@ -69,41 +119,14 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-3 border-t border-border pt-4">
-            <Link href="/" className="flex items-center gap-2 block text-foreground hover:text-primary transition-colors text-sm font-medium">
-              <Home size={16} />
-              Home
-            </Link>
-            <Link
-              href="/dashboard/creator"
-              className="flex items-center gap-2 block text-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-              <LayoutDashboard size={16} />
-              Dashboard
-            </Link>
-            <SmoothLink
-              href="#features"
-              className="flex items-center gap-2 block text-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-              <Info size={16} />
-              About
-            </SmoothLink>
-            <SmoothLink
-              href="#contact"
-              className="flex items-center gap-2 block text-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-              <Mail size={16} />
-              Contact
-            </SmoothLink>
-            <Link
-              href="/onboarding"
-              className="flex items-center gap-2 block w-full px-6 py-2 bg-primary text-primary-foreground rounded-full font-medium text-center hover:bg-primary-dark transition-all"
-            >
-              <Rocket size={16} />
-              Get Started
-            </Link>
+            {!isAuthenticated && defaultNavLinks}
+            {isAuthenticated && isCreatorDashboard && creatorNavLinks}
+            {isAuthenticated && isFanDashboard && fanNavLinks}
+            {isAuthenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
+            <LoginButton />
           </div>
         )}
       </div>
     </nav>
-  )
+  );
 }

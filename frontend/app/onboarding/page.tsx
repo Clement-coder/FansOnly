@@ -1,106 +1,203 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { ArrowRight, UserCog, Star, CheckCircle, ArrowLeft } from "lucide-react"
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { User, AtSign, MessageSquare, Image as ImageIcon, Rocket, Handshake } from "lucide-react";
+import { Input } from "../components/Input"; // Assuming you have an Input component
 
-export default function Onboarding() {
-  const [selectedRole, setSelectedRole] = useState<"creator" | "fan" | null>(null)
+export default function OnboardingPage() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    username: "",
+    bio: "",
+    avatar: null,
+    role: "",
+  });
 
-  const roles = [
-    {
-      id: "creator",
-      title: "Creator",
-      description: "Build campaigns and earn rewards from your loyal fans",
-      features: ["Create campaigns", "Manage rewards", "Track analytics", "Grow your community"],
-      icon: <UserCog size={36} />,
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData((prev) => ({ ...prev, avatar: e.target.files![0] }));
+    }
+  };
+
+  const handleRoleSelect = (role: string) => {
+    setFormData((prev) => ({ ...prev, role }));
+  };
+
+  const handleContinue = () => {
+    setStep(2);
+  };
+
+  const handleFinish = () => {
+    // Simulate API call or redirect
+    console.log("Onboarding complete:", formData);
+    // In a real app, you'd redirect based on formData.role
+    if (formData.role === "Creator") {
+      window.location.href = "/dashboard/creator"; // Replace with Next.js router push
+    } else if (formData.role === "Fan") {
+      window.location.href = "/dashboard/fan"; // Replace with Next.js router push
+    }
+  };
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    center: {
+      x: "0%",
+      opacity: 1,
     },
-    {
-      id: "fan",
-      title: "Fan",
-      description: "Support creators and earn exclusive rewards",
-      features: ["Earn points", "Unlock rewards", "Support creators", "Join communities"],
-      icon: <Star size={36} />,
-    },
-  ]
+    exit: (direction: number) => ({
+      x: direction < 0 ? "100%" : "-100%",
+      opacity: 0,
+    }),
+  };
 
   return (
-    <main className="min-h-screen bg-background py-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Choose Your Role</h1>
-          <p className="text-lg text-muted-foreground">Select how you want to use FansOnly</p>
-        </motion.div>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <motion.div
+        className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-8 relative overflow-hidden"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-3xl font-bold text-foreground text-center mb-8">
+          {step === 1 ? "Setup Your Profile" : "Choose Your Role"}
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {roles.map((role) => (
-            <motion.button
-              key={role.id}
-              onClick={() => setSelectedRole(role.id as "creator" | "fan")}
-              whileHover={{ y: -4 }}
-              className={`p-8 rounded-2xl border-4 transition-all text-left ${
-                selectedRole === role.id
-                  ? "border-primary bg-card shadow-xl"
-                  : "border-border bg-card hover:border-primary hover:shadow-md"
-              }`}
+        <AnimatePresence initial={false} mode="wait">
+          {step === 1 && (
+            <motion.div
+              key="step1"
+              custom={1} // Direction for slide
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              className="absolute w-full left-0 top-24 px-8" // Adjust top to align content
             >
-              <div className="text-4xl mb-4">{role.icon}</div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">{role.title}</h2>
-              <p className="text-muted-foreground mb-6">{role.description}</p>
-              <ul className="space-y-2 mb-6">
-                {role.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-foreground">
-                    <CheckCircle size={16} className="text-primary" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex items-center gap-2 text-primary font-semibold">
-                {selectedRole === role.id ? (
-                  <>
-                    <CheckCircle size={16} /> Selected
-                  </>
-                ) : (
-                  <>
-                    Select <ArrowRight size={16} />
-                  </>
-                )}
+              <div className="space-y-6">
+                <Input
+                  icon={<User size={20} className="text-muted-foreground" />}
+                  placeholder="Full Name"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
+                <Input
+                  icon={<AtSign size={20} className="text-muted-foreground" />}
+                  placeholder="Username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+                <Input
+                  icon={<MessageSquare size={20} className="text-muted-foreground" />}
+                  placeholder="Bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  isTextArea
+                />
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center overflow-hidden border border-border">
+                    {formData.avatar ? (
+                      <img
+                        src={URL.createObjectURL(formData.avatar)}
+                        alt="Avatar Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <ImageIcon size={30} className="text-muted-foreground" />
+                    )}
+                  </div>
+                  <label className="flex-grow px-4 py-2 bg-secondary text-foreground rounded-full font-medium cursor-pointer hover:bg-secondary-dark transition-colors text-center">
+                    Upload Avatar
+                    <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                  </label>
+                </div>
+                <motion.button
+                  onClick={handleContinue}
+                  className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Continue
+                </motion.button>
               </div>
-            </motion.button>
-          ))}
-        </div>
+            </motion.div>
+          )}
 
-        {selectedRole && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex gap-4 justify-center"
-          >
-            <Link
-              href={`/dashboard/${selectedRole}`}
-              className="px-8 py-3 bg-primary flex items-center gap-2 group text-primary-foreground ease-in-out translate-all duration-300
- rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+          {step === 2 && (
+            <motion.div
+              key="step2"
+              custom={-1} // Direction for slide
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              className="absolute w-full left-0 top-24 px-8" // Adjust top to align content
             >
-              Continue to Dashboard <ArrowRight size={16}  className="group-hover:translate-x-3 ease-in-out translate-all duration-300
-"/>
-            </Link>
-            <button
-              onClick={() => setSelectedRole(null)}
-              className="px-8 py-3 bg-card text-foreground ease-in-out translate-all duration-300
- flex items-center group gap-2  border border-border rounded-full font-semibold hover:bg-secondary transition-all"
-            >
-              <ArrowLeft size={16} className="group-hover:-translate-x-2 ease-in-out translate-all duration-300
-"/> Back
-            </button>
-          </motion.div>
-        )}
-      </div>
-    </main>
-  )
+              <div className="space-y-6">
+                <motion.div
+                  className={`p-6 rounded-2xl border-2 ${
+                    formData.role === "Creator" ? "border-primary shadow-primary-glow" : "border-border"
+                  } bg-background hover:shadow-lg transition-all cursor-pointer`}
+                  whileHover={{ scale: 1.02, boxShadow: "0 0 15px rgba(139, 92, 246, 0.5)" }}
+                  onClick={() => handleRoleSelect("Creator")}
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                      <Rocket size={24} />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground">Creator</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Build campaigns, engage fans, and distribute rewards.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  className={`p-6 rounded-2xl border-2 ${
+                    formData.role === "Fan" ? "border-primary shadow-primary-glow" : "border-border"
+                  } bg-background hover:shadow-lg transition-all cursor-pointer`}
+                  whileHover={{ scale: 1.02, boxShadow: "0 0 15px rgba(139, 92, 246, 0.5)" }}
+                  onClick={() => handleRoleSelect("Fan")}
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+                      <Handshake size={24} />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground">Fan</h3>
+                  </div>
+                  <p className="text-muted-foreground">
+                    Discover creators, join campaigns, and earn exclusive rewards.
+                  </p>
+                </motion.div>
+
+                <motion.button
+                  onClick={handleFinish}
+                  disabled={!formData.role}
+                  className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Finish
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
 }

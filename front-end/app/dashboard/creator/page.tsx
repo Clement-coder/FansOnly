@@ -9,6 +9,7 @@ import { DashboardLayout } from "@/app/components/dashboard-layout"
 
 export default function CreatorDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
+  const [campaigns, setCampaigns] = useState<any[]>([]) // Initialize campaigns as an empty array
   const { address: walletAddress, isConnected } = useAccount()
 
   useEffect(() => {
@@ -60,13 +61,13 @@ export default function CreatorDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             label="Total Coins Distributed"
-            value="50,000"
+            value="0"
             icon={<Coins size={32} />}
-            trend="+12% from last month"
+            trend="No engagement yet"
           />
-          <StatCard label="Active Fans" value="1,234" icon={<Users size={32} />} trend="+8% from last month" />
-          <StatCard label="Engagement Rate" value="68%" icon={<TrendingUp size={32} />} trend="+5% from last month" />
-          <StatCard label="Active Campaigns" value="3" icon={<Zap size={32} />} trend="2 ending soon" />
+          <StatCard label="Active Fans" value="0" icon={<Users size={32} />} trend="No engagement yet" />
+          <StatCard label="Engagement Rate" value="0%" icon={<TrendingUp size={32} />} trend="No engagement yet" />
+          <StatCard label="Active Campaigns" value="0" icon={<Zap size={32} />} trend="No campaigns yet" />
         </div>
 
         {/* Recent Campaigns */}
@@ -81,31 +82,33 @@ export default function CreatorDashboard() {
             </Link>
           </div>
 
-          <div className="space-y-4">
-            {[
-              { name: "Summer Fan Challenge", fans: 456, coins: 15000, status: "Active" },
-              { name: "Exclusive Content Access", fans: 234, coins: 12000, status: "Active" },
-              { name: "Birthday Celebration", fans: 89, coins: 5000, status: "Ending Soon" },
-            ].map((campaign, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-4 bg-secondary rounded-lg border border-border hover:border-primary transition-colors"
-              >
-                <div>
-                  <p className="font-semibold text-foreground">{campaign.name}</p>
-                  <p className="text-sm text-muted">{campaign.fans} fans participating</p>
+          {campaigns.length === 0 ? (
+            <div className="text-center text-muted py-8">
+              <p>No campaigns created yet. Start your first campaign to engage with your fans!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {campaigns.map((campaign, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-4 bg-secondary rounded-lg border border-border hover:border-primary transition-colors"
+                >
+                  <div>
+                    <p className="font-semibold text-foreground">{campaign.name}</p>
+                    <p className="text-sm text-muted">{campaign.fans} fans participating</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-primary">{campaign.coins.toLocaleString()} coins</p>
+                    <p
+                      className={`text-sm font-semibold ${campaign.status === "Active" ? "text-primary" : "text-accent"}`}
+                    >
+                      {campaign.status}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-primary">{campaign.coins.toLocaleString()} coins</p>
-                  <p
-                    className={`text-sm font-semibold ${campaign.status === "Active" ? "text-primary" : "text-accent"}`}
-                  >
-                    {campaign.status}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick Actions */}

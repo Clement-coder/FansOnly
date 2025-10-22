@@ -2,12 +2,13 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Header } from "../components/header"
 import { Footer } from "../components/footer"
 import { Wallet, User, CheckCircle2 } from "lucide-react"
 import { ConnectWalletButton } from "../components/connectWalletButton"
+import { useAccount } from "wagmi"
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1)
@@ -16,16 +17,17 @@ export default function OnboardingPage() {
     username: "",
     role: "fan",
   })
-  const [isConnected, setIsConnected] = useState(false)
+  const { isConnected } = useAccount()
+
+  useEffect(() => {
+    if (isConnected) {
+      setStep(2)
+    }
+  }, [isConnected])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleWalletConnect = () => {
-    setIsConnected(true)
-    setStep(2)
   }
 
   const handleProfileSubmit = (e: React.FormEvent) => {

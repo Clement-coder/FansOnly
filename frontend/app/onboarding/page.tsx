@@ -63,7 +63,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
-        className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-8 relative overflow-hidden"
+        className="w-full max-w-lg min-h-[600px] bg-card rounded-2xl shadow-lg border border-border p-8 relative overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -82,7 +82,7 @@ export default function OnboardingPage() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.5 }}
-              className="absolute w-full left-0 top-24 px-8" // Adjust top to align content
+              className="w-full px-8" // Removed absolute and top-24
             >
               <div className="space-y-6">
                 <Input
@@ -145,7 +145,7 @@ export default function OnboardingPage() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.5 }}
-              className="absolute w-full left-0 top-24 px-8" // Adjust top to align content
+              className="w-full px-8" // Removed absolute and top-24
             >
               <div className="space-y-6">
                 <motion.div

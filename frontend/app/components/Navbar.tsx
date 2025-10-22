@@ -11,7 +11,7 @@ import { usePrivy } from "@privy-io/react-auth";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated } = usePrivy();
+  const { ready, authenticated } = usePrivy();
 
   const isCreatorDashboard = pathname.startsWith("/dashboard/creator");
   const isFanDashboard = pathname.startsWith("/dashboard/fan");
@@ -79,6 +79,10 @@ export default function Navbar() {
     </>
   );
 
+  if (!ready) {
+    return null; // Or a loading spinner
+  }
+
   return (
     <nav className="sticky top-0 z-50 bg-card border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,10 +100,10 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            {!isAuthenticated && defaultNavLinks}
-            {isAuthenticated && isCreatorDashboard && creatorNavLinks}
-            {isAuthenticated && isFanDashboard && fanNavLinks}
-            {isAuthenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
+            {!authenticated && defaultNavLinks}
+            {authenticated && isCreatorDashboard && creatorNavLinks}
+            {authenticated && isFanDashboard && fanNavLinks}
+            {authenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
           </div>
 
           {/* CTA Button */}
@@ -119,10 +123,10 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-3 border-t border-border pt-4">
-            {!isAuthenticated && defaultNavLinks}
-            {isAuthenticated && isCreatorDashboard && creatorNavLinks}
-            {isAuthenticated && isFanDashboard && fanNavLinks}
-            {isAuthenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
+            {!authenticated && defaultNavLinks}
+            {authenticated && isCreatorDashboard && creatorNavLinks}
+            {authenticated && isFanDashboard && fanNavLinks}
+            {authenticated && !isCreatorDashboard && !isFanDashboard && defaultNavLinks} {/* Fallback for authenticated but not on dashboard */}
             <LoginButton />
           </div>
         )}

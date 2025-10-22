@@ -1,7 +1,6 @@
 // app/lib/privyConfig.ts
-import type { PrivyConfig } from "@privy-io/react-auth";
 
-export const privyConfig: PrivyConfig = {
+export const privyConfig = {
   appearance: {
     walletList: ["injected", "walletconnect"],
     showWalletLoginFirst: true,

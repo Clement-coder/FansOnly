@@ -1,11 +1,25 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Sidebar } from "@/app/components/sidebar"
 import { StatCard } from "@/app/components/stat-card"
 import { Coins, Award, TrendingUp, Zap } from "lucide-react"
+import { useAccount } from "wagmi"
 
 export default function FanDashboard() {
+  const [userProfile, setUserProfile] = useState<any>(null)
+  const { address: walletAddress, isConnected } = useAccount()
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedProfile = localStorage.getItem("userProfile")
+      if (storedProfile) {
+        setUserProfile(JSON.parse(storedProfile))
+      }
+    }
+  }, [])
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar role="fan" />
@@ -13,8 +27,37 @@ export default function FanDashboard() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, Fan!</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Welcome back, {userProfile?.name || "Fan"}!
+            </h1>
             <p className="text-muted">Track your rewards and engagement progress.</p>
+          </div>
+
+          {/* User Information Summary */}
+          <div className="card-base mb-8 p-6">
+            <h2 className="text-xl font-bold text-foreground mb-4">Your Profile</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-muted">Name:</p>
+                <p className="font-semibold text-foreground">{userProfile?.name || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-muted">Username:</p>
+                <p className="font-semibold text-foreground">{userProfile?.username || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-muted">Email:</p>
+                <p className="font-semibold text-foreground">{userProfile?.email || "N/A"}</p>
+              </div>
+              <div>
+                <p className="text-muted">Role:</p>
+                <p className="font-semibold text-foreground capitalize">{userProfile?.role || "N/A"}</p>
+              </div>
+              <div className="md:col-span-2">
+                <p className="text-muted">Wallet Address:</p>
+                <p className="font-semibold text-foreground break-all">{walletAddress || "Not Connected"}</p>
+              </div>
+            </div>
           </div>
 
           {/* Stats Grid */}

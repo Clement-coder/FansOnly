@@ -15,7 +15,13 @@ export default function OnboardingPage() {
   const [formData, setFormData] = useState({
     name: "",
     username: "",
+    email: "",
     role: "fan",
+  })
+  const [validationErrors, setValidationErrors] = useState({
+    name: false,
+    username: false,
+    email: false,
   })
   const { isConnected } = useAccount()
 
@@ -32,6 +38,18 @@ export default function OnboardingPage() {
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const newErrors = {
+      name: !formData.name,
+      username: !formData.username,
+      email: !formData.email,
+    }
+    setValidationErrors(newErrors)
+
+    if (newErrors.name || newErrors.username || newErrors.email) {
+      return
+    }
+
+    localStorage.setItem("userProfile", JSON.stringify(formData))
     setStep(3)
   }
 
@@ -121,32 +139,57 @@ export default function OnboardingPage() {
                 <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
                   Full Name
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="John Doe"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  required
-                />
+                <div className="relative">
+                  <User size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="John Doe"
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.name ? "border-red-500 animate-shake" : "border-border"}`}
+                    required
+                  />
+                </div>
               </div>
 
               <div>
                 <label htmlFor="username" className="block text-sm font-semibold text-foreground mb-2">
                   Username
                 </label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  placeholder="@johndoe"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  required
-                />
+                <div className="relative">
+                  <User size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    placeholder="@johndoe"
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.username ? "border-red-500 animate-shake" : "border-border"}`}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail absolute left-3 top-1/2 -translate-y-1/2 text-muted"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="you@example.com"
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.email ? "border-red-500 animate-shake" : "border-border"}`}
+                    required
+                  />
+                </div>
               </div>
 
               <div>
@@ -158,12 +201,21 @@ export default function OnboardingPage() {
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-input text-foreground appearance-none pr-8 leading-tight focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                 >
                   <option value="fan">Fan</option>
                   <option value="creator">Creator</option>
                   <option value="both">Both</option>
                 </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
               </div>
 
               <button type="submit" className="btn-primary w-full">
@@ -187,17 +239,68 @@ export default function OnboardingPage() {
               <CheckCircle2 size={32} className="text-primary" />
             </div>
 
-            <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to FansOnly!</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              Welcome{formData.name ? `, ${formData.name}` : ""}!
+            </h2>
             <p className="text-muted mb-8">
               Your profile is all set. You're ready to start your journey in the new era of fan engagement.
             </p>
 
-            <div className="bg-secondary rounded-lg p-4 mb-8 text-left">
-              <p className="text-sm text-muted mb-2">Profile Summary</p>
-              <div className="space-y-2">
-                <p className="text-foreground font-semibold">{formData.name}</p>
-                <p className="text-muted text-sm">{formData.username}</p>
-                <p className="text-muted text-sm capitalize">Role: {formData.role}</p>
+            {formData.role === "creator" && (
+              <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-8">
+                <h3 className="font-semibold mb-2">Creator's Corner</h3>
+                <p>As a creator, you can now set up your campaigns, manage subscriptions, and track your earnings.</p>
+                {/* Placeholder for more creator-specific info */}
+              </div>
+            )}
+
+            {formData.role === "fan" && (
+              <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-8">
+                <h3 className="font-semibold mb-2">Fan Zone</h3>
+                <p>Explore exclusive content, subscribe to your favorite creators, and earn rewards!</p>
+                {/* Placeholder for more fan-specific info */}
+              </div>
+            )}
+
+            {formData.role === "both" && (
+              <div className="bg-purple-100 text-purple-800 p-4 rounded-lg mb-8">
+                <h3 className="font-semibold mb-2">Hybrid Hub</h3>
+                <p>Enjoy the best of both worlds! Create content and support your favorite artists.</p>
+                {/* Placeholder for more hybrid-specific info */}
+              </div>
+            )}
+
+            <div className="bg-secondary rounded-lg p-6 mb-8 text-left shadow-inner">
+              <p className="text-lg font-bold text-foreground mb-4">Profile Summary</p>
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <User size={20} className="text-primary mr-3" />
+                  <div>
+                    <p className="text-muted text-sm">Full Name</p>
+                    <p className="text-foreground font-semibold">{formData.name}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <User size={20} className="text-primary mr-3" /> {/* Consider a more specific icon for username if available */}
+                  <div>
+                    <p className="text-muted text-sm">Username</p>
+                    <p className="text-foreground font-semibold">{formData.username}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail text-primary mr-3"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <div>
+                    <p className="text-muted text-sm">Email</p>
+                    <p className="text-foreground font-semibold">{formData.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-briefcase text-primary mr-3"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <div>
+                    <p className="text-muted text-sm">Role</p>
+                    <p className="text-foreground font-semibold capitalize">{formData.role}</p>
+                  </div>
+                </div>
               </div>
             </div>
 

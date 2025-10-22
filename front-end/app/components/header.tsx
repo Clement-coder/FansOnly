@@ -1,20 +1,27 @@
 "use client"
 
 import Link from "next/link"
-import { Wallet } from "lucide-react"
-import { useState } from "react"
+import { Wallet, LayoutDashboard } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [userProfile, setUserProfile] = useState<any>(null)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedProfile = localStorage.getItem("userProfile")
+      if (storedProfile) {
+        setUserProfile(JSON.parse(storedProfile))
+      }
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">F</span>
-          </div>
-          <span className="font-bold text-lg text-foreground hidden sm:inline">FansOnly</span>
+          <img src="/FansOnly.png" alt="FansOnly Logo" className="h-12 w-auto" />
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -35,10 +42,22 @@ export function Header() {
           </Link>
         </div>
 
-        <Link href="/onboarding" className="btn-primary hidden sm:inline-flex items-center gap-2">
-          <Wallet size={18} />
-          Connect Wallet
-        </Link>
+        <div className="hidden sm:flex items-center gap-4">
+          {userProfile ? (
+            <Link
+              href={userProfile.role === "creator" ? "/dashboard/creator" : "/dashboard/fan"}
+              className="btn-primary flex items-center gap-2"
+            >
+              <LayoutDashboard size={18} />
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link href="/onboarding" className="btn-primary flex items-center gap-2">
+              <Wallet size={18} />
+              Connect Wallet
+            </Link>
+          )}
+        </div>
 
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,10 +84,21 @@ export function Header() {
             <Link href="#about" className="block text-foreground hover:text-primary">
               About
             </Link>
-            <Link href="/onboarding" className="btn-primary flex items-center justify-center gap-2 w-full">
-              <Wallet size={18} />
-              Connect Wallet
-            </Link>
+            {userProfile ? (
+              <Link
+                href={userProfile.role === "creator" ? "/dashboard/creator" : "/dashboard/fan"}
+                className="btn-primary flex items-center justify-center gap-2 w-full"
+                onClick={() => setIsOpen(false)}
+              >
+                <LayoutDashboard size={18} />
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/onboarding" className="btn-primary flex items-center justify-center gap-2 w-full">
+                <Wallet size={18} />
+                Connect Wallet
+              </Link>
+            )}
           </div>
         </div>
       )}

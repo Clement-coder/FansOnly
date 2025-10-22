@@ -2,14 +2,16 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Zap, BarChart3, Settings, LogOut } from "lucide-react"
+import { LayoutDashboard, Zap, BarChart3, Settings, LogOut, X } from "lucide-react"
 import { ConnectWalletButton } from "./connectWalletButton"
 
 interface SidebarProps {
   role: "creator" | "fan"
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
 }
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, isSidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname()
 
   const creatorLinks = [
@@ -29,14 +31,14 @@ export function Sidebar({ role }: SidebarProps) {
   const links = role === "creator" ? creatorLinks : fanLinks
 
   return (
-    <aside className="w-64 bg-card border-r border-border h-screen sticky top-0 flex flex-col">
-      <div className="p-6 border-b border-border">
+    <aside className="w-64 bg-card border-r border-border h-screen flex flex-col">
+      <div className="p-6 border-b border-border flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold">F</span>
-          </div>
-          <span className="font-bold text-foreground">FansOnly</span>
+          <img src="/FansOnly.png" alt="FansOnly Logo" className="h-12 w-auto" />
         </Link>
+        <button onClick={toggleSidebar} className="lg:hidden text-muted hover:text-foreground">
+          <X size={24} />
+        </button>
       </div>
 
       <nav className="flex-1 p-4 space-y-2">
@@ -50,6 +52,7 @@ export function Sidebar({ role }: SidebarProps) {
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
               }`}
+              onClick={toggleSidebar} // Close sidebar on link click on small screens
             >
               <Icon size={20} />
               <span className="font-medium">{link.label}</span>

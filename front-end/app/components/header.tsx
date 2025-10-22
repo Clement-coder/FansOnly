@@ -65,10 +65,8 @@ export function Header() {
             <Link href="#about" className="block text-foreground hover:text-primary">
               About
             </Link>
-            <Link href="/onboarding" className="btn-primary flex items-center justify-center gap-2 w-full">
-              <Wallet size={18} />
-              Connect Wallet
-            </Link>
+            <ConnectWalletButton/>
+            
           </div>
         </div>
       )}

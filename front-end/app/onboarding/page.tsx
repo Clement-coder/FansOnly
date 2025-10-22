@@ -18,11 +18,7 @@ export default function OnboardingPage() {
     email: "",
     role: "fan",
   })
-  const [validationErrors, setValidationErrors] = useState({
-    name: false,
-    username: false,
-    email: false,
-  })
+  const [validationErrors, setValidationErrors] = useState<any>({})
   const { isConnected } = useAccount()
 
   useEffect(() => {
@@ -38,14 +34,13 @@ export default function OnboardingPage() {
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const newErrors = {
-      name: !formData.name,
-      username: !formData.username,
-      email: !formData.email,
-    }
+    const newErrors: any = {}
+    if (!formData.name) newErrors.name = "Full name is required"
+    if (!formData.username) newErrors.username = "Username is required"
+    if (!formData.email) newErrors.email = "Email is required"
     setValidationErrors(newErrors)
 
-    if (newErrors.name || newErrors.username || newErrors.email) {
+    if (Object.keys(newErrors).length > 0) {
       return
     }
 
@@ -149,9 +144,9 @@ export default function OnboardingPage() {
                     onChange={handleInputChange}
                     placeholder="John Doe"
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.name ? "border-red-500 animate-shake" : "border-border"}`}
-                    required
                   />
                 </div>
+                {validationErrors.name && <p className="text-red-500 text-sm mt-1">{validationErrors.name}</p>}
               </div>
 
               <div>
@@ -168,9 +163,9 @@ export default function OnboardingPage() {
                     onChange={handleInputChange}
                     placeholder="@johndoe"
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.username ? "border-red-500 animate-shake" : "border-border"}`}
-                    required
                   />
                 </div>
+                {validationErrors.username && <p className="text-red-500 text-sm mt-1">{validationErrors.username}</p>}
               </div>
 
               <div>
@@ -187,9 +182,9 @@ export default function OnboardingPage() {
                     onChange={handleInputChange}
                     placeholder="you@example.com"
                     className={`w-full pl-10 pr-4 py-3 rounded-lg border bg-input text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all ${validationErrors.email ? "border-red-500 animate-shake" : "border-border"}`}
-                    required
                   />
                 </div>
+                {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
               </div>
 
               <div>

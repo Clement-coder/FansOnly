@@ -6,17 +6,32 @@ import { StatCard } from "@/app/components/stat-card"
 import { Coins, Users, TrendingUp, Zap } from "lucide-react"
 import { useAccount } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
+import { CreateCampaignModal } from "@/app/components/create-campaign-modal"
 
 export default function CreatorDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
   const [campaigns, setCampaigns] = useState<any[]>([]) // Initialize campaigns as an empty array
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { address: walletAddress, isConnected } = useAccount()
+
+  const handleCreateCampaign = (campaign: any) => {
+    console.log("New campaign created:", campaign)
+    const newCampaign = { ...campaign, fans: 0, coins: 0, status: "Active" };
+    const updatedCampaigns = [...campaigns, newCampaign];
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+    setIsModalOpen(false)
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedProfile = localStorage.getItem("userProfile")
       if (storedProfile) {
         setUserProfile(JSON.parse(storedProfile))
+      }
+      const storedCampaigns = localStorage.getItem("campaigns");
+      if (storedCampaigns) {
+        setCampaigns(JSON.parse(storedCampaigns));
       }
     }
   }, [])
@@ -61,13 +76,13 @@ export default function CreatorDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             label="Total Coins Distributed"
-            value="0"
+            value={campaigns.reduce((acc, campaign) => acc + campaign.coins, 0).toLocaleString()}
             icon={<Coins size={32} />}
             trend="No engagement yet"
           />
-          <StatCard label="Active Fans" value="0" icon={<Users size={32} />} trend="No engagement yet" />
+          <StatCard label="Active Fans" value={campaigns.reduce((acc, campaign) => acc + campaign.fans, 0).toString()} icon={<Users size={32} />} trend="No engagement yet" />
           <StatCard label="Engagement Rate" value="0%" icon={<TrendingUp size={32} />} trend="No engagement yet" />
-          <StatCard label="Active Campaigns" value="0" icon={<Zap size={32} />} trend="No campaigns yet" />
+          <StatCard label="Active Campaigns" value={campaigns.length.toString()} icon={<Zap size={32} />} trend={`${campaigns.length} campaigns running`} />
         </div>
 
         {/* Recent Campaigns */}
@@ -95,7 +110,8 @@ export default function CreatorDashboard() {
                 >
                   <div>
                     <p className="font-semibold text-foreground">{campaign.name}</p>
-                    <p className="text-sm text-muted">{campaign.fans} fans participating</p>
+                    <p className="text-sm text-muted">{campaign.description}</p>
+                    <p className="text-sm text-muted mt-2">{campaign.fans} fans participating</p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-primary">{campaign.coins.toLocaleString()} coins</p>
@@ -111,21 +127,21 @@ export default function CreatorDashboard() {
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="card-base">
-            <h3 className="text-lg font-bold text-foreground mb-4">Create New Campaign</h3>
-            <p className="text-muted mb-6">Launch a new loyalty campaign to engage your fans.</p>
-            <button className="btn-primary w-full">Start Campaign</button>
-          </div>
-
-          <div className="card-base">
-            <h3 className="text-lg font-bold text-foreground mb-4">View Detailed Analytics</h3>
-            <p className="text-muted mb-6">Get insights into fan behavior and engagement patterns.</p>
-            <button className="btn-secondary w-full">View Analytics</button>
-          </div>
-        </div>
-      </div>
-    </DashboardLayout>
-  )
-}
+        {/* Create Campaign Button */}
+        <div className="card-base">
+          <h3 className="text-lg font-bold text-foreground mb-4">Create New Campaign</h3>
+          <p className="text-muted mb-6">Launch a new loyalty campaign to engage your fans.</p>
+          <button className="btn-primary w-full" onClick={() => setIsModalOpen(true)}>
+            Create New Campaign
+          </button>
+                </div>
+              </div>
+              <CreateCampaignModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onCreateCampaign={handleCreateCampaign}
+              />
+            </DashboardLayout>
+          )
+        }
+        

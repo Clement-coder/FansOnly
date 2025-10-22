@@ -17,8 +17,10 @@ export default function OnboardingPage() {
     role: "",
   });
 
-  const { user, updateUser } = usePrivy();
+  const { user } = usePrivy(); // Removed updateUser
   const router = useRouter();
+
+  console.log("OnboardingPage: user", user);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -43,25 +45,40 @@ export default function OnboardingPage() {
     console.log("Onboarding complete:", formData);
     if (user) {
       try {
-        await updateUser({
-          metadata: {
-            role: formData.role,
-            fullName: formData.fullName,
-            username: formData.username,
-            bio: formData.bio,
-            onboardingComplete: true,
+        const response = await fetch('/api/update-user-metadata', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            userId: user.id,
+            metadata: {
+              role: formData.role,
+              fullName: formData.fullName,
+              username: formData.username,
+              bio: formData.bio,
+              onboardingComplete: true,
+            },
+          }),
         });
 
-        if (formData.role === "Creator") {
-          router.push("/dashboard/creator");
-        } else if (formData.role === "Fan") {
-          router.push("/dashboard/fan");
+        if (response.ok) {
+          if (formData.role === "Creator") {
+            router.push("/dashboard/creator");
+          } else if (formData.role === "Fan") {
+            router.push("/dashboard/fan");
+          }
+        } else {
+          const errorData = await response.json();
+          console.error("Failed to update user metadata via API:", errorData);
+          // Handle error, maybe show a message to the user
         }
       } catch (error) {
-        console.error("Error updating user metadata:", error);
-        // Handle error, maybe show a message to the user
+        console.error("Error calling API route:", error);
+        // Handle network errors
       }
+    } else {
+      console.error("Privy user not available.", { user });
     }
   };
 

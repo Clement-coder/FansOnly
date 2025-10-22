@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { StatCard } from "@/app/components/stat-card"
-import { Coins, Users, TrendingUp, Zap } from "lucide-react"
+import { Coins, Users, TrendingUp, Zap, CalendarDays, Tag, AlignLeft, CircleDollarSign, Activity } from "lucide-react"
 import { useAccount } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
 import { CreateCampaignModal } from "@/app/components/create-campaign-modal"
@@ -12,15 +12,30 @@ export default function CreatorDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
   const [campaigns, setCampaigns] = useState<any[]>([]) // Initialize campaigns as an empty array
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingCampaign, setEditingCampaign] = useState<any>(null) // New state for editing campaign
   const { address: walletAddress, isConnected } = useAccount()
 
-  const handleCreateCampaign = (campaign: any) => {
-    console.log("New campaign created:", campaign)
-    const newCampaign = { ...campaign, fans: 0, coins: 0, status: "Active" };
-    const updatedCampaigns = [...campaigns, newCampaign];
+  const handleSaveCampaign = (campaign: any) => {
+    let updatedCampaigns;
+    if (editingCampaign) {
+      // Editing existing campaign
+      updatedCampaigns = campaigns.map((c) =>
+        c.name === editingCampaign.name ? { ...campaign, fans: c.fans, coins: c.coins, status: c.status } : c
+      );
+    } else {
+      // Creating new campaign
+      const newCampaign = { ...campaign, fans: 0, coins: 0, status: "Active", startDate: new Date().toISOString().split('T')[0], endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] };
+      updatedCampaigns = [...campaigns, newCampaign];
+    }
     setCampaigns(updatedCampaigns);
     localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
-    setIsModalOpen(false)
+    setIsModalOpen(false);
+    setEditingCampaign(null); // Clear editing campaign after save
+  }
+
+  const handleEditCampaignClick = (campaign: any) => {
+    setEditingCampaign(campaign);
+    setIsModalOpen(true);
   }
 
   useEffect(() => {
@@ -31,7 +46,12 @@ export default function CreatorDashboard() {
       }
       const storedCampaigns = localStorage.getItem("campaigns");
       if (storedCampaigns) {
-        setCampaigns(JSON.parse(storedCampaigns));
+        const parsedCampaigns = JSON.parse(storedCampaigns).map((campaign: any) => ({
+          ...campaign,
+          startDate: campaign.startDate || new Date().toISOString().split('T')[0],
+          endDate: campaign.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        }));
+        setCampaigns(parsedCampaigns);
       }
     }
   }, [])
@@ -109,17 +129,42 @@ export default function CreatorDashboard() {
                   className="flex items-center justify-between p-4 bg-secondary rounded-lg border border-border hover:border-primary transition-colors"
                 >
                   <div>
-                    <p className="font-semibold text-foreground">{campaign.name}</p>
-                    <p className="text-sm text-muted">{campaign.description}</p>
-                    <p className="text-sm text-muted mt-2">{campaign.fans} fans participating</p>
+                    <div className="flex items-center">
+                      <Tag size={16} className="mr-1 text-muted" />
+                      <p className="font-semibold text-foreground">{campaign.name}</p>
+                    </div>
+                    <div className="flex items-center text-sm text-muted">
+                      <AlignLeft size={16} className="mr-1" />
+                      <p>{campaign.description}</p>
+                    </div>
+                    <div className="flex items-center text-sm text-muted mt-2">
+                      <CalendarDays size={16} className="mr-1" />
+                      <span>{campaign.startDate} - {campaign.endDate}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-muted mt-2">
+                      <Users size={16} className="mr-1" />
+                      <p>{campaign.fans} fans participating</p>
+                    </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-primary">{campaign.coins.toLocaleString()} coins</p>
-                    <p
-                      className={`text-sm font-semibold ${campaign.status === "Active" ? "text-primary" : "text-accent"}`}
+                    <div className="flex items-center justify-end">
+                      <CircleDollarSign size={16} className="mr-1 text-primary" />
+                      <p className="font-bold text-primary">{campaign.coins.toLocaleString()} coins</p>
+                    </div>
+                    <div className="flex items-center justify-end mt-1">
+                      <Activity size={16} className={`mr-1 ${campaign.status === "Active" ? "text-primary" : "text-accent"}`} />
+                      <p
+                        className={`text-sm font-semibold ${campaign.status === "Active" ? "text-primary" : "text-accent"}`}
+                      >
+                        {campaign.status}
+                      </p>
+                    </div>
+                    <button
+                      className="text-sm text-blue-500 hover:underline mt-2"
+                      onClick={() => handleEditCampaignClick(campaign)}
                     >
-                      {campaign.status}
-                    </p>
+                      Edit
+                    </button>
                   </div>
                 </div>
               ))}
@@ -131,15 +176,17 @@ export default function CreatorDashboard() {
         <div className="card-base">
           <h3 className="text-lg font-bold text-foreground mb-4">Create New Campaign</h3>
           <p className="text-muted mb-6">Launch a new loyalty campaign to engage your fans.</p>
-          <button className="btn-primary w-full" onClick={() => setIsModalOpen(true)}>
+          <button className="btn-primary w-full" onClick={() => { setEditingCampaign(null); setIsModalOpen(true); }}>
             Create New Campaign
           </button>
                 </div>
               </div>
               <CreateCampaignModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onCreateCampaign={handleCreateCampaign}
+                onClose={() => { setIsModalOpen(false); setEditingCampaign(null); }}
+                onCreateCampaign={handleSaveCampaign}
+                onEditCampaign={handleSaveCampaign}
+                campaign={editingCampaign}
               />
             </DashboardLayout>
           )

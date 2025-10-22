@@ -11,6 +11,7 @@ import { wagmiConfig } from "../lib/wagmiConfig";
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  console.log("Privy App ID:", process.env.NEXT_PUBLIC_PRIVY_APP_ID);
   return (
     <PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!} config={privyConfig}>
       <QueryClientProvider client={queryClient}>

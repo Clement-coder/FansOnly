@@ -15,9 +15,9 @@ export function ConnectWalletButton() {
 
   const wallet = wallets[0];
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex mb-2 bg-gray-300 rounded-2xl mx-2 py-2 px-2 items-center gap-2">
       <span>{user?.email ?? wallet?.address?.slice(0, 6) + "..."}</span>
-      <button className="bg-red-500 py-2 px-3 rounded-xl cursor-pointer " onClick={logout}>Logout</button>
+      <button className="bg-red-500 py-2 px-3 rounded-xl cursor-pointer " onClick={logout}>Disconnect</button>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Zap, BarChart3, Settings, LogOut } from "lucide-react"
+import { ConnectWalletButton } from "./connectWalletButton"
 
 interface SidebarProps {
   role: "creator" | "fan"
@@ -57,12 +58,7 @@ export function Sidebar({ role }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border">
-        <button className="flex items-center gap-3 w-full px-4 py-3 text-muted hover:text-foreground transition-colors rounded-lg hover:bg-secondary">
-          <LogOut size={20} />
-          <span className="font-medium">Disconnect</span>
-        </button>
-      </div>
+   <ConnectWalletButton/>
     </aside>
   )
 }

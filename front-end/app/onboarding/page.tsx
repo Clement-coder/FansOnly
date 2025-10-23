@@ -120,7 +120,7 @@ export default function OnboardingPage() {
               By connecting, you agree to our Terms of Service and Privacy Policy.
             </p>
           </div>
-        )}
+        
 
         {/* Step 2: Profile Setup */}
         {step === 2 && (

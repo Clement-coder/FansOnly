@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { StatCard } from "@/app/components/stat-card"
-import { Coins, Award, TrendingUp, Zap } from "lucide-react"
+import { Coins, Award, TrendingUp, Zap, User, Mail, Briefcase, Wallet, Target, Gift } from "lucide-react"
 import { useAccount } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
 
@@ -38,24 +38,40 @@ export default function FanDashboard() {
         <div className="card-base mb-8 p-6">
           <h2 className="text-xl font-bold text-foreground mb-4">Your Profile</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-muted">Name:</p>
-              <p className="font-semibold text-foreground">{userProfile?.name || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Name:</p>
+                <p className="font-semibold text-foreground">{userProfile?.name || "N/A"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted">Username:</p>
-              <p className="font-semibold text-foreground">{userProfile?.username || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Username:</p>
+                <p className="font-semibold text-foreground">{userProfile?.username || "N/A"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted">Email:</p>
-              <p className="font-semibold text-foreground">{userProfile?.email || "N/A"}</p>
+            <div className="flex items-center gap-2">
+              <Mail size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Email:</p>
+                <p className="font-semibold text-foreground">{userProfile?.email || "N/A"}</p>
+              </div>
             </div>
-                          <div>
-                            <p className="text-muted">Role:</p>
-                            <p className="font-semibold text-foreground capitalize">{"fan"}</p>
-                          </div>            <div className="md:col-span-2">
-              <p className="text-muted">Wallet Address:</p>
-              <p className="font-semibold text-foreground break-all">{walletAddress || "Not Connected"}</p>
+            <div className="flex items-center gap-2">
+              <Briefcase size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Role:</p>
+                <p className="font-semibold text-foreground capitalize">{"fan"}</p>
+              </div>
+            </div>
+            <div className="md:col-span-2 flex items-center gap-2">
+              <Wallet size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Wallet Address:</p>
+                <p className="font-semibold text-foreground break-all">{walletAddress || "Not Connected"}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -79,18 +95,21 @@ export default function FanDashboard() {
                                       ) : (
                                         <div className="space-y-6">
                                           {milestones.map((milestone, idx) => (
-                                            <div key={idx}>
-                                              <div className="flex items-center justify-between mb-2">
-                                                <span className="font-semibold text-foreground">{milestone.name}</span>
-                                                <span className="text-sm text-muted">
-                                                  {milestone.current} / {milestone.target}
-                                                </span>
-                                              </div>
-                                              <div className="h-3 bg-secondary rounded-full overflow-hidden">
-                                                <div
-                                                  className="h-full bg-primary rounded-full transition-all"
-                                                  style={{ width: `${(milestone.current / milestone.target) * 100}%` }}
-                                                ></div>
+                                            <div key={idx} className="flex items-center gap-3">
+                                              <Target size={20} className="text-primary" />
+                                              <div>
+                                                <div className="flex items-center justify-between mb-2">
+                                                  <span className="font-semibold text-foreground">{milestone.name}</span>
+                                                  <span className="text-sm text-muted">
+                                                    {milestone.current} / {milestone.target}
+                                                  </span>
+                                                </div>
+                                                <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                                                  <div
+                                                    className="h-full bg-primary rounded-full transition-all"
+                                                    style={{ width: `${(milestone.current / milestone.target) * 100}%` }}
+                                                  ></div>
+                                                </div>
                                               </div>
                                             </div>
                                           ))}
@@ -99,19 +118,13 @@ export default function FanDashboard() {
                                     </div>
                                     <div class="card-base">
                     <h3 className="text-lg font-bold text-foreground mb-6">Available Rewards</h3>
-                    {[] && ( // Replace [] with actual rewards array when available
+                    {rewards.length === 0 ? (
                       <div className="text-center text-muted py-8">
                         <p>No rewards available yet. Keep engaging to unlock exciting rewards!</p>
                       </div>
-                    )}
-                    {/* Original reward list (commented out or removed if no rewards) */}
-                    {/*
+                    ) : (
                     <div className="space-y-3">
-                      {[
-                        { name: "Exclusive Content Pack", coins: 500, available: true },
-                        { name: "VIP Access Pass", coins: 1000, available: true },
-                        { name: "Merchandise Bundle", coins: 2000, available: false },
-                      ].map((reward, idx) => (
+                      {rewards.map((reward, idx) => (
                         <div
                           key={idx}
                           className={`p-4 rounded-lg border transition-all ${
@@ -121,9 +134,12 @@ export default function FanDashboard() {
                           }`}
                         >
                           <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-foreground">{reward.name}</p>
-                              <p className="text-sm text-muted">{reward.coins} coins</p>
+                            <div className="flex items-center gap-2">
+                              <Gift size={20} className="text-primary" />
+                              <div>
+                                <p className="font-semibold text-foreground">{reward.name}</p>
+                                <p className="text-sm text-muted">{reward.coins} coins</p>
+                              </div>
                             </div>
                             <button
                               disabled={!reward.available}
@@ -139,7 +155,7 @@ export default function FanDashboard() {
                         </div>
                       ))}
                     </div>
-                    */}
+                    )}
                   </div>
                 </div>
         
@@ -160,8 +176,6 @@ export default function FanDashboard() {
                       <p>You are not following any creators yet. Explore and find your favorites!</p>
                     </div>
                   )}
-                  {/* Original following creators list (commented out or removed if no creators) */}
-                  {/*
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
                       { name: "Creator One", followers: "12.5K", coins: 450 },
@@ -173,7 +187,9 @@ export default function FanDashboard() {
                         className="p-4 bg-secondary rounded-lg border border-border hover:border-primary transition-colors"
                       >
                         <div className="flex items-center justify-between mb-3">
-                          <div className="w-10 h-10 bg-primary rounded-full"></div>
+                          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground">
+                            <User size={24} />
+                          </div>
                           <button className="text-muted hover:text-foreground transition-colors">✕</button>
                         </div>
                         <p className="font-semibold text-foreground mb-1">{creator.name}</p>
@@ -182,7 +198,6 @@ export default function FanDashboard() {
                       </div>
                     ))}
                   </div>
-                  */}
                 </div>
       </div>
     </DashboardLayout>

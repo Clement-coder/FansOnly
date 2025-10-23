@@ -6,7 +6,7 @@ import { StatCard } from "@/app/components/stat-card"
 import { Coins, Award, TrendingUp, Zap, User, Mail, Briefcase, Wallet, Target, Gift, CalendarDays, Tag } from "lucide-react"
 import { useAccount, useReadContract } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
-import { userRegistery } from "@/abi/userRegistry"
+import { userRegistery } from "@/app/abi/userRegistry"
 import { contract } from "@/app/lib/config"
 
 export default function FanDashboard() {

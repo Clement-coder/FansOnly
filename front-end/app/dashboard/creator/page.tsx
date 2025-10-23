@@ -7,7 +7,7 @@ import { Coins, Users, TrendingUp, Zap, CalendarDays, Tag, AlignLeft, CircleDoll
 import { useAccount, useReadContract } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
 import { CreateCampaignModal } from "@/app/components/create-campaign-modal"
-import { userRegistery } from "@/abi/userRegistry"
+import { userRegistery } from "@/app/abi/userRegistry"
 import { contract } from "@/app/lib/config"
 
 export default function CreatorDashboard() {

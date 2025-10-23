@@ -10,7 +10,7 @@ import { ConnectWalletButton } from "../components/connectWalletButton"
 import { useAccount } from "wagmi"
 import { useRouter } from "next/navigation"
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { userRegistery } from '../../abi/userRegistry'
+import { userRegistery } from '../abi/userRegistry'
 import { contract } from '../lib/config'
 import { motion } from 'framer-motion'
 

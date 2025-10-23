@@ -94,7 +94,7 @@ export default function FanHistory() {
                       </span>
                     </td>
                   </tr>
-                )))}
+                ))}
               </tbody>
             </table>
           </div>

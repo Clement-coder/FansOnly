@@ -23,7 +23,9 @@ export default function CreatorDashboard() {
     functionName: 'users',
     args: [walletAddress!],
     query: {
+      query: {
       enabled: !!walletAddress,
+    },
     },
   })
 

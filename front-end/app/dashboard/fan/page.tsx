@@ -83,13 +83,7 @@ export default function FanDashboard() {
                 <p className="font-semibold text-foreground">{userData ? new Date(Number((userData as any)[2]) * 1000).toLocaleDateString() : 'N/A'}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Tag size={16} className="text-muted" />
-              <div>
-                <p className="text-muted">Profile URI:</p>
-                <p className="font-semibold text-foreground">{userData ? (userData as any)[3] : 'N/A'}</p>
-              </div>
-            </div>
+
             <div className="md:col-span-2 flex items-center gap-2">
               <Wallet size={16} className="text-muted" />
               <div>

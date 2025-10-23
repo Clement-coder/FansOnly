@@ -71,7 +71,7 @@ export default function OnboardingPage() {
     // Simulate uploading to IPFS
     const profileData = { name: formData.name, username: formData.username, email: formData.email };
     const blob = new Blob([JSON.stringify(profileData)], { type: 'application/json' });
-    const profileURI = `ipfs://...`; // Replace with actual IPFS hash
+    const profileURI = ""; // Temporary: Replace with actual IPFS hash after upload
     
     const finalFormData = { ...formData, profileURI };
     setFormData(finalFormData);

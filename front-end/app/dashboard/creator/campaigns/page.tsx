@@ -12,6 +12,11 @@ export default function CreatorCampaigns() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [campaignToDelete, setCampaignToDelete] = useState<any>(null)
   const [campaignToEdit, setCampaignToEdit] = useState<any>(null)
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   useEffect(() => {
     const storedCampaigns = localStorage.getItem("campaigns")
@@ -58,7 +63,7 @@ export default function CreatorCampaigns() {
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role="creator" />
+      <Sidebar role="creator" isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className="flex-1 overflow-auto">
         <div className="p-8">

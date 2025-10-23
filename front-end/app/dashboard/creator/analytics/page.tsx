@@ -1,71 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Sidebar } from "@/app/components/sidebar"
-import { StatCard } from "@/app/components/stat-card"
-import { TrendingUp, Users, Zap, BarChart3 } from "lucide-react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useState } from "react";
+import { Sidebar } from "@/app/components/sidebar";
 
-export default function CreatorAnalytics() {
-  const [campaigns, setCampaigns] = useState<any[]>([])
+export default function CreatorAnalyticsPage() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    const storedCampaigns = localStorage.getItem("campaigns")
-    if (storedCampaigns) {
-      setCampaigns(JSON.parse(storedCampaigns))
-    }
-  }, [])
-
-  const totalCampaigns = campaigns.length
-  const totalFans = campaigns.reduce((acc, campaign) => acc + campaign.fans, 0)
-  const totalCoins = campaigns.reduce((acc, campaign) => acc + campaign.coins, 0)
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role="creator" />
+      <Sidebar role="creator" isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className="flex-1 overflow-auto">
         <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
-            <p className="text-muted">Track your campaign performance and fan engagement.</p>
-          </div>
-
-          {/* Analytics Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard label="Total Campaigns" value={totalCampaigns.toString()} icon={<TrendingUp size={32} />} trend="" />
-            <StatCard label="Total Fans" value={totalFans.toString()} icon={<Users size={32} />} trend="" />
-            <StatCard label="Total Coins Distributed" value={totalCoins.toLocaleString()} icon={<Zap size={32} />} trend="" />
-            <StatCard label="Avg. Engagement Rate" value="N/A" icon={<BarChart3 size={32} />} trend="" />
-          </div>
-
-          {/* Charts Placeholder */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="card-base">
-              <h3 className="text-lg font-bold text-foreground mb-6">Fans per Campaign</h3>
-              <div className="h-64 bg-secondary rounded-lg">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={campaigns}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="fans" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+          <h1 className="text-3xl font-bold mb-8">Creator Analytics</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Placeholder for analytics cards */}
+            <div className="bg-card p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Total Subscribers</h2>
+              <p className="text-3xl font-bold">1,234</p>
             </div>
-
-            <div className="card-base">
-              <h3 className="text-lg font-bold text-foreground mb-6">Fan Demographics</h3>
-              <div className="h-64 bg-secondary rounded-lg flex items-center justify-center">
-                <p className="text-muted">Chart visualization would go here</p>
-              </div>
+            <div className="bg-card p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Monthly Revenue</h2>
+              <p className="text-3xl font-bold">$5,678.90</p>
+            </div>
+            <div className="bg-card p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Engagement Rate</h2>
+              <p className="text-3xl font-bold">12.3%</p>
             </div>
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

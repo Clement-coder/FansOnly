@@ -22,7 +22,9 @@ export default function CreatorDashboard() {
     address: contract.userRegistry as `0x${string}`,
     functionName: 'users',
     args: [walletAddress!],
-    enabled: !!walletAddress,
+    query: {
+      enabled: !!walletAddress,
+    },
   })
 
   const handleSaveCampaign = (campaign: any) => {

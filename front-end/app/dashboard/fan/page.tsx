@@ -20,7 +20,9 @@ export default function FanDashboard() {
     address: contract.userRegistry as `0x${string}`,
     functionName: 'users',
     args: [walletAddress!],
-    enabled: !!walletAddress,
+    query: {
+      enabled: !!walletAddress,
+    },
   })
 
   useEffect(() => {

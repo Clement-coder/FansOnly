@@ -1,12 +1,14 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { StatCard } from "@/app/components/stat-card"
 import { Coins, Users, TrendingUp, Zap, CalendarDays, Tag, AlignLeft, CircleDollarSign, Activity, Mail, Briefcase, Wallet, User } from "lucide-react"
-import { useAccount } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
 import { CreateCampaignModal } from "@/app/components/create-campaign-modal"
+import { userRegistery } from "@/abi/userRegistry"
+import { contract } from "@/app/lib/config"
 
 export default function CreatorDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
@@ -14,6 +16,14 @@ export default function CreatorDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCampaign, setEditingCampaign] = useState<any>(null) // New state for editing campaign
   const { address: walletAddress, isConnected } = useAccount()
+
+  const { data: userData } = useReadContract({
+    abi: userRegistery,
+    address: contract.userRegistry as `0x${string}`,
+    functionName: 'users',
+    args: [walletAddress!],
+    enabled: !!walletAddress,
+  })
 
   const handleSaveCampaign = (campaign: any) => {
     let updatedCampaigns;
@@ -97,7 +107,21 @@ export default function CreatorDashboard() {
               <Briefcase size={16} className="text-muted" />
               <div>
                 <p className="text-muted">Role:</p>
-                <p className="font-semibold text-foreground capitalize">{"creator"}</p>
+                <p className="font-semibold text-foreground capitalize">{userData ? (userData as any)[0] === 1 ? 'Creator' : 'Fan' : 'N/A'}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <CalendarDays size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Registered On:</p>
+                <p className="font-semibold text-foreground">{userData ? new Date(Number((userData as any)[2]) * 1000).toLocaleDateString() : 'N/A'}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Tag size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Profile URI:</p>
+                <p className="font-semibold text-foreground">{userData ? (userData as any)[3] : 'N/A'}</p>
               </div>
             </div>
             <div className="md:col-span-2 flex items-center gap-2">
@@ -209,4 +233,3 @@ export default function CreatorDashboard() {
             </DashboardLayout>
           )
         }
-        

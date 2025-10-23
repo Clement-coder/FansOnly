@@ -1,17 +1,27 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { StatCard } from "@/app/components/stat-card"
-import { Coins, Award, TrendingUp, Zap, User, Mail, Briefcase, Wallet, Target, Gift } from "lucide-react"
-import { useAccount } from "wagmi"
+import { Coins, Award, TrendingUp, Zap, User, Mail, Briefcase, Wallet, Target, Gift, CalendarDays, Tag } from "lucide-react"
+import { useAccount, useReadContract } from "wagmi"
 import { DashboardLayout } from "@/app/components/dashboard-layout"
+import { userRegistery } from "@/abi/userRegistry"
+import { contract } from "@/app/lib/config"
 
 export default function FanDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
   const [milestones, setMilestones] = useState<any[]>([]) // Initialize milestones as an empty array
   const [rewards, setRewards] = useState<any[]>([]) // Initialize rewards as an empty array
   const { address: walletAddress, isConnected } = useAccount()
+
+  const { data: userData } = useReadContract({
+    abi: userRegistery,
+    address: contract.userRegistry as `0x${string}`,
+    functionName: 'users',
+    args: [walletAddress!],
+    enabled: !!walletAddress,
+  })
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -63,7 +73,21 @@ export default function FanDashboard() {
               <Briefcase size={16} className="text-muted" />
               <div>
                 <p className="text-muted">Role:</p>
-                <p className="font-semibold text-foreground capitalize">{"fan"}</p>
+                <p className="font-semibold text-foreground capitalize">{userData ? (userData as any)[0] === 0 ? 'Fan' : 'Creator' : 'N/A'}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <CalendarDays size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Registered On:</p>
+                <p className="font-semibold text-foreground">{userData ? new Date(Number((userData as any)[2]) * 1000).toLocaleDateString() : 'N/A'}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Tag size={16} className="text-muted" />
+              <div>
+                <p className="text-muted">Profile URI:</p>
+                <p className="font-semibold text-foreground">{userData ? (userData as any)[3] : 'N/A'}</p>
               </div>
             </div>
             <div className="md:col-span-2 flex items-center gap-2">

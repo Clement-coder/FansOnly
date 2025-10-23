@@ -1,7 +1,6 @@
-"use client"
+'use client'
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Header } from "../components/header"
@@ -9,6 +8,11 @@ import { Footer } from "../components/footer"
 import { Wallet, User, CheckCircle2 } from "lucide-react"
 import { ConnectWalletButton } from "../components/connectWalletButton"
 import { useAccount } from "wagmi"
+import { useRouter } from "next/navigation"
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi"
+import { userRegistery } from '../../abi/userRegistry'
+import { contract } from '../lib/config'
+import { motion } from 'framer-motion'
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1)
@@ -17,9 +21,17 @@ export default function OnboardingPage() {
     username: "",
     email: "",
     role: "fan",
+    profileURI: "",
   })
   const [validationErrors, setValidationErrors] = useState<any>({})
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
+  const router = useRouter()
+  const { data: hash, writeContract, isPending, error } = useWriteContract()
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = 
+    useWaitForTransactionReceipt({
+      hash,
+    })
 
   useEffect(() => {
     if (isConnected) {
@@ -27,12 +39,24 @@ export default function OnboardingPage() {
     }
   }, [isConnected])
 
+  useEffect(() => {
+    if (isConfirmed) {
+      let finalFormData = { ...formData };
+      if (formData.role === "creator") {
+        finalFormData = { ...formData, role: "both" };
+        setFormData(finalFormData);
+      }
+      localStorage.setItem("userProfile", JSON.stringify(finalFormData));
+      setStep(3);
+    }
+  }, [isConfirmed]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleProfileSubmit = (e: React.FormEvent) => {
+  const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const newErrors: any = {}
     if (!formData.name) newErrors.name = "Full name is required"
@@ -44,13 +68,26 @@ export default function OnboardingPage() {
       return
     }
 
-    const finalFormData = { ...formData };
-    if (finalFormData.role === "creator") {
-      finalFormData.role = "both";
-    }
+    // Simulate uploading to IPFS
+    const profileData = { name: formData.name, username: formData.username, email: formData.email };
+    const blob = new Blob([JSON.stringify(profileData)], { type: 'application/json' });
+    const profileURI = `ipfs://...`; // Replace with actual IPFS hash
+    
+    const finalFormData = { ...formData, profileURI };
+    setFormData(finalFormData);
 
-    localStorage.setItem("userProfile", JSON.stringify(finalFormData))
-    setStep(3)
+    writeContract({
+      abi: userRegistery,
+      address: contract.userRegistry as `0x${string}`,
+      functionName: 'registerUser', 
+      args: [formData.role === 'fan' ? 0 : 1, profileURI ],
+    })
+  }
+
+  const slideAnimation = {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -100 },
   }
 
   return (
@@ -100,8 +137,15 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Step 1: Wallet Connection */}
-          <div className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8">
+        {step === 1 && (
+          <motion.div
+            key="step1"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={slideAnimation}
+            className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8"
+          >
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Wallet size={32} className="text-primary" />
@@ -111,20 +155,25 @@ export default function OnboardingPage() {
             </div>
 
             <div className="justify-center flex flex-col items-center">
-                <div></div>
-             <ConnectWalletButton/>
-             
+              <div></div>
+              <ConnectWalletButton />
             </div>
 
             <p className="text-xs text-muted text-center mt-6">
               By connecting, you agree to our Terms of Service and Privacy Policy.
             </p>
-          </div>
-        
+          </motion.div>
+        )}
 
-        {/* Step 2: Profile Setup */}
         {step === 2 && (
-          <div className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8">
+          <motion.div
+            key="step2"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={slideAnimation}
+            className="card-base max-w-md mx-auto animate-fade-in p-4 sm:p-8"
+          >
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User size={32} className="text-primary" />
@@ -216,10 +265,15 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary w-full">
-                Continue
+              <button type="submit" className="btn-primary w-full" disabled={isPending || isConfirming}>
+                {isPending ? 'Confirming...' : (isConfirming ? 'Waiting for confirmation...' : 'Continue')}
               </button>
             </form>
+
+            {hash && <div className="mt-4 text-center">Transaction Hash: {hash}</div>}
+            {isConfirming && <div className="mt-4 text-center">Waiting for confirmation...</div>}
+            {isConfirmed && <div className="mt-4 text-center">Transaction confirmed!</div>}
+            {error && <div className="mt-4 text-center text-red-500">Error: {error.message}</div>}
 
             <button
               onClick={() => setStep(1)}
@@ -227,12 +281,19 @@ export default function OnboardingPage() {
             >
               Back
             </button>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 3: Completion */}
         {step === 3 && (
-          <div className="card-base max-w-md mx-auto animate-fade-in text-center p-4 sm:p-8">
+          <motion.div
+            key="step3"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={slideAnimation}
+            className="card-base max-w-md mx-auto animate-fade-in text-center p-4 sm:p-8"
+          >
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 size={32} className="text-primary" />
             </div>
@@ -256,7 +317,6 @@ export default function OnboardingPage() {
               <div className="bg-purple-100 text-purple-800 p-4 rounded-lg mb-8">
                 <h3 className="font-semibold mb-2">Creator & Fan Hub</h3>
                 <p>As a creator, you can now set up your campaigns, manage subscriptions, and track your earnings. You also have access to all fan privileges!</p>
-                {/* Placeholder for more hybrid-specific info */}
               </div>
             )}
 
@@ -305,7 +365,7 @@ export default function OnboardingPage() {
                 Back to Home
               </Link>
             </div>
-          </div>
+          </motion.div>
         )}
       </main>
 

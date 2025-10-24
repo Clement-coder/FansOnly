@@ -225,7 +225,8 @@ export default function OnboardingPage() {
                 <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
                   Email Address
                 </label>
-                  <Mail size={20} className="relative top-9 left-3 text-muted" />
+                <div className="relative">
+                  <Mail size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                   <input
                     type="email"
                     id="email"
@@ -237,8 +238,9 @@ export default function OnboardingPage() {
                   />
                 </div>
                 {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
+              </div>
 
-              <div>
+              <div className="relative">
                 <label htmlFor="role" className="block text-sm font-semibold text-foreground mb-2">
                   I am a...
                 </label>

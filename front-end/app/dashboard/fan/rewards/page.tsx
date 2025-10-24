@@ -19,7 +19,6 @@ export default function FanRewards() {
             <p className="text-muted">Browse and claim available rewards from creators you follow.</p>
           </div>
 
-          {/* Filter Tabs */}
           <div className="flex gap-4 mb-8 border-b border-border">
             <button className="px-4 py-3 font-semibold text-primary border-b-2 border-primary">All Rewards</button>
             <button className="px-4 py-3 font-semibold text-muted hover:text-foreground transition-colors">

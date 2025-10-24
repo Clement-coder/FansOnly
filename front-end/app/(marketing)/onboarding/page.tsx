@@ -3,15 +3,15 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Header } from "../components/header"
-import { Footer } from "../components/footer"
+import { Header } from "../../components/header"
+import { Footer } from "../../components/footer"
 import { Wallet, User, CheckCircle2, Briefcase, Mail, ChevronDown } from "lucide-react"
-import { ConnectWalletButton } from "../components/connectWalletButton"
+import { ConnectWalletButton } from "../../components/connectWalletButton"
 import { useAccount } from "wagmi"
 import { useRouter } from "next/navigation"
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { userRegistery } from '../abi/userRegistry'
-import { contract } from '../lib/config'
+import { userRegistery } from '../../abi/userRegistry'
+import { contract } from '../../lib/config'
 import { motion } from 'framer-motion'
 
 export default function OnboardingPage() {

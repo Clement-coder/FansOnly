@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { Header } from "./components/header"
-import { Footer } from "./components/footer"
-import { FeatureCard } from "./components/feature-card"
+import { Header } from "../components/header"
+import { Footer } from "../components/footer"
+import { FeatureCard } from "../components/feature-card"
 import { Zap, Users, TrendingUp, Lock, Award, BarChart3 } from "lucide-react"
 
 

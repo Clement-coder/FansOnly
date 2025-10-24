@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "FansOnly - Decentralized Loyalty Platform",
   description: "The new era of fan engagement and creator economy",
-  generator: "v0.app",
 }
 
 export default function RootLayout({

@@ -9,12 +9,12 @@ import { DashboardLayout } from "@/app/components/dashboard-layout"
 import { userRegistery } from "@/app/abi/userRegistry"
 import { contract } from "@/app/lib/config"
 
+
 export default function FanDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null)
-  const [milestones, setMilestones] = useState<any[]>([]) // Initialize milestones as an empty array
-  const [rewards, setRewards] = useState<any[]>([]) // Initialize rewards as an empty array
+  const [milestones, setMilestones] = useState<any[]>([]) 
+  const [rewards, setRewards] = useState<any[]>([]) 
   const { address: walletAddress, isConnected } = useAccount()
-
   const { data: userData } = useReadContract({
     abi: userRegistery,
     address: contract.userRegistry as `0x${string}`,

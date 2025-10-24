@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { ThemeProvider } from 'next-themes';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useEffect, useState } from "react";
+import { ThemeProvider } from "next-themes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { createConfig, WagmiProvider } from "@privy-io/wagmi";
 import { http } from "viem";
@@ -23,18 +23,24 @@ const wagmiConfig = createConfig({
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
 
+  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+  if (!privyAppId) {
+    console.error("❌ Missing NEXT_PUBLIC_PRIVY_APP_ID — Privy will not initialize.");
+    return <>{children}</>; // Render the app without Privy
+  }
+
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
+      appId={privyAppId}
       config={{
+        loginMethods: ["wallet"],
+        appearance: { theme: "light" },
+        defaultChain: baseSepolia,
         supportedChains: [mainnet, sepolia, base, baseSepolia],
-        // Further Privy config if needed
       }}
     >
       <QueryClientProvider client={queryClient}>

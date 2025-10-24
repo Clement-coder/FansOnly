@@ -111,11 +111,11 @@ export default function Home() {
               </p>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start gap-3">
-                  <BarChart3 size={24} className="text-primary flex-shrink-0 mt-1" />
+                  <BarChart3 size={24} className="text-primary shrink-0 mt-1" />
                   <span className="text-foreground">Advanced analytics and insights</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Award size={24} className="text-primary flex-shrink-0 mt-1" />
+                  <Award size={24} className="text-primary shrink-0 mt-1" />
                   <span className="text-foreground">Customizable reward structures</span>
                 </li>
                 <li className="flex items-start gap-3">

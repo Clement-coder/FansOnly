@@ -136,7 +136,8 @@ export default function FanDashboard() {
                                         </div>
                                       )}
                                     </div>
-                                    <div class="card-base">
+                                    <div className="card-base">
+
                     <h3 className="text-lg font-bold text-foreground mb-6">Available Rewards</h3>
                     {rewards.length === 0 ? (
                       <div className="text-center text-muted py-8">
@@ -191,33 +192,7 @@ export default function FanDashboard() {
                     </Link>
                   </div>
         
-                  {[] && ( // Replace [] with actual creators array when available
-                    <div className="text-center text-muted py-8">
-                      <p>You are not following any creators yet. Explore and find your favorites!</p>
-                    </div>
-                  )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                      { name: "Creator One", followers: "12.5K", coins: 450 },
-                      { name: "Creator Two", followers: "8.2K", coins: 320 },
-                      { name: "Creator Three", followers: "5.1K", coins: 180 },
-                    ].map((creator, idx) => (
-                      <div
-                        key={idx}
-                        className="p-4 bg-secondary rounded-lg border border-border hover:border-primary transition-colors"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground">
-                            <User size={24} />
-                          </div>
-                          <button className="text-muted hover:text-foreground transition-colors">✕</button>
-                        </div>
-                        <p className="font-semibold text-foreground mb-1">{creator.name}</p>
-                        <p className="text-sm text-muted mb-3">{creator.followers} followers</p>
-                        <p className="text-primary font-semibold">{creator.coins} coins earned</p>
-                      </div>
-                    ))}
-                  </div>
+                  
                 </div>
       </div>
     </DashboardLayout>

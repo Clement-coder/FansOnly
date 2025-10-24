@@ -2,11 +2,15 @@
 
 import { Sidebar } from "@/app/components/sidebar"
 import { Gift, Lock } from "lucide-react"
+import { useState } from "react"
 
 export default function FanRewards() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar role="fan" />
+      <Sidebar role="fan" isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className="flex-1 overflow-auto">
         <div className="p-8">

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Header } from "../components/header"
 import { Footer } from "../components/footer"
-import { Wallet, User, CheckCircle2, Briefcase } from "lucide-react"
+import { Wallet, User, CheckCircle2, Briefcase, Mail, ChevronDown } from "lucide-react"
 import { ConnectWalletButton } from "../components/connectWalletButton"
 import { useAccount } from "wagmi"
 import { useRouter } from "next/navigation"
@@ -225,8 +225,7 @@ export default function OnboardingPage() {
                 <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
                   Email Address
                 </label>
-                <div className="relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <Mail size={20} className="relative top-9 left-3 text-muted" />
                   <input
                     type="email"
                     id="email"
@@ -238,7 +237,6 @@ export default function OnboardingPage() {
                   />
                 </div>
                 {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
-              </div>
 
               <div>
                 <label htmlFor="role" className="block text-sm font-semibold text-foreground mb-2">
@@ -255,13 +253,7 @@ export default function OnboardingPage() {
                   <option value="creator">Creator</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                  <ChevronDown className="fill-current h-4 w-4" />
                 </div>
               </div>
 
@@ -338,7 +330,7 @@ export default function OnboardingPage() {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <Mail size={20}/>
                   <div>
                     <p className="text-muted text-sm">Email</p>
                     <p className="text-foreground font-semibold">{formData.email}</p>

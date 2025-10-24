@@ -17,17 +17,16 @@ export default function CreatorDashboard() {
   const [editingCampaign, setEditingCampaign] = useState<any>(null) // New state for editing campaign
   const { address: walletAddress, isConnected } = useAccount()
 
-  const { data: userData } = useReadContract({
-    abi: userRegistery,
-    address: contract.userRegistry as `0x${string}`,
-    functionName: 'users',
-    args: [walletAddress!],
-    query: {
-      query: {
-      enabled: !!walletAddress,
-    },
-    },
-  })
+const { data: userData } = useReadContract({
+  abi: userRegistery,
+  address: contract.userRegistry as `0x${string}`,
+  functionName: "users",
+  args: [walletAddress!],
+  query: {
+    enabled: !!walletAddress, // ✅ Only this
+  },
+});
+
 
   const handleSaveCampaign = (campaign: any) => {
     let updatedCampaigns;

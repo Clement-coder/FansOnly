@@ -1,15 +1,16 @@
 "use client";
 
+import React, { useEffect, useState } from 'react';
+import { ThemeProvider } from 'next-themes';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PrivyProvider } from "@privy-io/react-auth";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createConfig } from "@privy-io/wagmi";
-import { WagmiProvider } from "@privy-io/wagmi";
+import { createConfig, WagmiProvider } from "@privy-io/wagmi";
 import { http } from "viem";
 import { mainnet, sepolia, base, baseSepolia } from "viem/chains";
 
 const queryClient = new QueryClient();
 
-export const wagmiConfig = createConfig({
+const wagmiConfig = createConfig({
   chains: [mainnet, sepolia, base, baseSepolia],
   transports: {
     [mainnet.id]: http(),
@@ -19,22 +20,28 @@ export const wagmiConfig = createConfig({
   },
 });
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''}
       config={{
-        embeddedWallets: {
-          ethereum: { createOnLogin: "users-without-wallets" },
-          solana: { createOnLogin: "users-without-wallets" },
-        },
-        appearance: { walletChainType: "ethereum-and-solana" },
+        supportedChains: [mainnet, sepolia, base, baseSepolia],
+        // Further Privy config if needed
       }}
     >
-      {/* ✅ WagmiProvider must wrap QueryClientProvider */}
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </PrivyProvider>

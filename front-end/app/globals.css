@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* FansOnly Color Palette */
+  /* FansOnly  Palette */
   --marine-blue: #2b5288;
   --light-taupe: #e5e0d9;
   --text-dark: #0b1720;
@@ -230,7 +230,7 @@
     @apply bg-card text-card-foreground rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-border;
   }
 
-  /* Use standard Tailwind animation classes instead of custom animate-fade-in */
+  
   .section-fade {
     @apply opacity-0;
     animation: fade-in 0.6s ease-out forwards;

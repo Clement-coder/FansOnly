@@ -28,16 +28,16 @@ export function Header() {
           <Link href="/" className="text-foreground hover:text-primary transition-colors">
             Home
           </Link>
-          <Link href="#features" className="text-foreground hover:text-primary transition-colors">
+          <Link href="/#features" className="text-foreground hover:text-primary transition-colors">
             Features
           </Link>
-          <Link href="#creators" className="text-foreground hover:text-primary transition-colors">
+          <Link href="/#creators" className="text-foreground hover:text-primary transition-colors">
             Creators
           </Link>
-          <Link href="#fans" className="text-foreground hover:text-primary transition-colors">
+          <Link href="/#fans" className="text-foreground hover:text-primary transition-colors">
             Fans
           </Link>
-          <Link href="#about" className="text-foreground hover:text-primary transition-colors">
+          <Link href="/#about" className="text-foreground hover:text-primary transition-colors">
             About
           </Link>
         </div>
@@ -72,16 +72,16 @@ export function Header() {
             <Link href="/" className="block text-foreground hover:text-primary">
               Home
             </Link>
-            <Link href="#features" className="block text-foreground hover:text-primary">
+            <Link href="/#features" className="block text-foreground hover:text-primary">
               Features
             </Link>
-            <Link href="#creators" className="block text-foreground hover:text-primary">
+            <Link href="/#creators" className="block text-foreground hover:text-primary">
               Creators
             </Link>
-            <Link href="#fans" className="block text-foreground hover:text-primary">
+            <Link href="/#fans" className="block text-foreground hover:text-primary">
               Fans
             </Link>
-            <Link href="#about" className="block text-foreground hover:text-primary">
+            <Link href="/#about" className="block text-foreground hover:text-primary">
               About
             </Link>
             {userProfile ? (

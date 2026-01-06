@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "./providers/provider"
 import "./globals.css"
 
@@ -21,11 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} font-sans antialiased`}>
         <Providers>
-           {children}
-        <Analytics />
-
+          {children}
         </Providers>
-       
       </body>
     </html>
   )
